@@ -1,0 +1,307 @@
+\documentclass[12pt]{article}
+
+% =====================================================================
+% jnc-tex-template (v0.01)
+% A customizable LaTeX template for academic manuscripts with Pandoc
+% compatibility and toggleable formatting modes.
+%
+% Intended use: Pandoc / Quarto -> LaTeX -> PDF
+%
+% Toggle variables (set in YAML):
+%   titlepage:        true/false  (use dedicated title page vs \maketitle)
+%   blind:            true/false  (anonymize author block on title page)
+%   doublespace:      true/false  (double vs 1.5 spacing)
+%   linenumbers:      true/false  (enable line numbers)
+%   numbersections:   true/false  (toggle section numbering)
+% =====================================================================
+
+% =======================================================
+% 1. ENGINE + TYPOGRAPHY
+% =======================================================
+\usepackage{iftex}
+
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage{mathpazo}
+\else
+  \usepackage{fontspec}
+  \setmainfont{TeX Gyre Pagella}
+\fi
+
+\usepackage{microtype}
+
+% =======================================================
+% 2. PAGE LAYOUT
+% =======================================================
+\usepackage[left=1in,right=1in,top=1in,bottom=1in]{geometry}
+\usepackage{setspace}
+
+$if(doublespace)$
+\doublespacing
+$else$
+\onehalfspacing
+$endif$
+
+\setlength{\parindent}{15pt}
+\setlength{\parskip}{0pt}
+
+% =======================================================
+% 3. GRAPHICS + FLOATS
+% =======================================================
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{longtable,booktabs}
+\usepackage{array}
+\usepackage{caption}
+
+\captionsetup{
+  font=small,
+  labelfont=bf
+}
+
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{1}
+\setcounter{totalnumber}{3}
+
+\renewcommand{\arraystretch}{1.1}
+
+% --- Auto-scale images ---
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+% =======================================================
+% 4. TABLE AUTOMATION (Pandoc longtable)
+% =======================================================
+\AtBeginEnvironment{longtable}{
+  \footnotesize
+  \singlespacing
+  \setlength{\LTleft}{0pt}
+  \setlength{\LTright}{0pt}
+  \setlength{\LTcapwidth}{\textwidth}
+}
+
+% =======================================================
+% 5. SECTION FORMATTING
+% =======================================================
+\usepackage{titlesec}
+
+\titleformat{\section}
+  {\large\bfseries}
+  {\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries}
+  {\thesubsection}{1em}{}
+
+% =======================================================
+% 5B. SECTION NUMBERING TOGGLE
+% =======================================================
+$if(numbersections)$
+% Number through subsubsection (adjust if desired)
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+$else$
+% Suppress numbering but keep structural hierarchy
+\setcounter{secnumdepth}{0}
+$endif$
+
+% =======================================================
+% 6. HYPERREF
+% =======================================================
+\usepackage[hidelinks]{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue
+}
+
+% =======================================================
+% 7. OPTIONAL MODES
+% =======================================================
+$if(linenumbers)$
+\usepackage{lineno}
+\linenumbers
+$endif$
+
+% =======================================================
+% 8. PANDOC SUPPORT
+% =======================================================
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+}
+
+\providecommand{\pandocbounded}[1]{#1}
+
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+
+$header-includes$
+
+% =======================================================
+% 9. CSL REFERENCES (Pandoc)
+% =======================================================
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+
+\providecommand{\citeproctext}{}
+
+\newenvironment{CSLReferences}[2]
+ {%
+  \section*{References}
+  \begin{list}{}{%
+   \setlength{\itemindent}{0pt}
+   \setlength{\leftmargin}{0pt}
+   \setlength{\parsep}{0pt}
+   \ifodd #1
+    \setlength{\leftmargin}{\cslhangindent}
+    \setlength{\itemindent}{-\cslhangindent}
+   \fi
+   \ifnum #2 > 0
+    \setlength{\itemsep}{#2\baselineskip}
+   \else
+    \setlength{\itemsep}{0pt}
+   \fi
+  }%
+  \renewcommand{\bibitem}[2][]{\item}
+ }
+ {\end{list}}
+
+% =======================================================
+% 10. R / SOFTWARE MACROS
+% =======================================================
+\newcommand{\pkg}[1]{\texttt{#1}}
+\newcommand{\CRANpkg}[1]{\texttt{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+% =======================================================
+% BEGIN DOCUMENT
+% =======================================================
+\begin{document}
+
+% =======================================================
+% TITLE LOGIC
+% =======================================================
+$if(titlepage)$
+\begin{titlepage}
+\vspace*{0.06\textheight}
+\begin{center}
+
+{\setstretch{0.9}\LARGE\bfseries $title$\par}
+
+$if(subtitle)$
+\vspace{0.25em}
+{\large $subtitle$\par}
+$endif$
+
+\vspace{2em}
+
+\begin{singlespace}
+{\normalsize
+
+$for(author)$
+$if(blind)$
+\textbf{Anonymous Author}\par
+$else$
+\textbf{$author.name$}\par
+
+$if(author.affiliation)$
+$author.affiliation$\par
+$endif$
+
+$if(author.address)$
+$for(author.address)$
+$author.address$\par
+$endfor$
+$endif$
+
+$if(author.email)$
+\texttt{$author.email$}\par
+$endif$
+
+$if(author.url)$
+\texttt{$author.url$}\par
+$endif$
+
+$if(author.orcid)$
+ORCID: $author.orcid$\par
+$endif$
+$endif$
+
+\vspace{0.5em}
+$endfor$
+
+}
+\end{singlespace}
+
+\vfill
+
+\begin{minipage}{\textwidth-2in}
+\small
+\singlespacing
+\textbf{Abstract}\par
+\vspace{0.25em}
+$abstract$
+
+$if(keywords)$
+\vspace{1em}
+\noindent\textbf{Keywords:}
+$for(keywords)$$keywords$$sep$, $endfor$
+$endif$
+\end{minipage}
+
+\vfill
+\end{center}
+
+$if(acknowledgements)$
+\vfill
+\noindent\rule{0.3\textwidth}{0.4pt}\par
+\footnotesize
+\textbf{Acknowledgements}\par
+$acknowledgements$
+\normalsize
+$endif$
+
+\end{titlepage}
+
+$else$
+
+\title{$title$}
+\author{$for(author)$$author.name$$sep$ \\ $endfor$}
+\date{}
+\maketitle
+
+$endif$
+
+% =======================================================
+% MAIN BODY
+% =======================================================
+
+% Pandoc-safe linebreak handling
+\makeatletter
+\let\old@newline\\
+\renewcommand{\\}{%
+  \ifhmode
+    \old@newline
+  \else
+    \par\vspace{0.5em}%
+  \fi
+}
+\makeatother
+
+$body$
+
+% =======================================================
+% REFERENCES (page break if bibliography present)
+% =======================================================
+$if(bibliography)$
+\clearpage
+$endif$
+
+\end{document}
