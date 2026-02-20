@@ -1,20 +1,5 @@
 \documentclass[12pt]{article}
 
-% =====================================================================
-% jnc-tex-template (v0.01)
-% A customizable LaTeX template for academic manuscripts with Pandoc
-% compatibility and toggleable formatting modes.
-%
-% Intended use: Pandoc / Quarto -> LaTeX -> PDF
-%
-% Toggle variables (set in YAML):
-%   titlepage:        true/false  (use dedicated title page vs \maketitle)
-%   blind:            true/false  (anonymize author block on title page)
-%   doublespace:      true/false  (double vs 1.5 spacing)
-%   linenumbers:      true/false  (enable line numbers)
-%   numbersections:   true/false  (toggle section numbering)
-% =====================================================================
-
 % =======================================================
 % 1. ENGINE + TYPOGRAPHY
 % =======================================================
@@ -75,6 +60,8 @@ $endif$
 % =======================================================
 % 4. TABLE AUTOMATION (Pandoc longtable)
 % =======================================================
+\usepackage{etoolbox}
+
 \AtBeginEnvironment{longtable}{
   \footnotesize
   \singlespacing
@@ -84,41 +71,39 @@ $endif$
 }
 
 % =======================================================
-% 5. SECTION FORMATTING
+% 5. SECTION FORMATTING + NUMBERING TOGGLE
 % =======================================================
 \usepackage{titlesec}
 
-\titleformat{\section}
-  {\large\bfseries}
-  {\thesection}{1em}{}
-
-\titleformat{\subsection}
-  {\normalsize\bfseries}
-  {\thesubsection}{1em}{}
-
-% =======================================================
-% 5B. SECTION NUMBERING TOGGLE
-% =======================================================
 $if(numbersections)$
-% Number through subsubsection (adjust if desired)
-\setcounter{secnumdepth}{3}
-\setcounter{tocdepth}{3}
+  % Numbered headings
+  \setcounter{secnumdepth}{3}
+  \setcounter{tocdepth}{3}
+
+  \titleformat{\section}
+    {\large\bfseries}
+    {\thesection}{1em}{}
+
+  \titleformat{\subsection}
+    {\normalsize\bfseries}
+    {\thesubsection}{1em}{}
 $else$
-% Suppress numbering but keep structural hierarchy
-\setcounter{secnumdepth}{0}
+  % Unnumbered headings (no label + no reserved label spacing)
+  \setcounter{secnumdepth}{0}
+
+  \titleformat{\section}
+    {\large\bfseries}
+    {}{0pt}{}
+
+  \titleformat{\subsection}
+    {\normalsize\bfseries}
+    {}{0pt}{}
 $endif$
 
 % =======================================================
 % 6. HYPERREF
 % =======================================================
 \usepackage[hidelinks]{hyperref}
-
-\hypersetup{
-  colorlinks=true,
-  linkcolor=black,
-  citecolor=black,
-  urlcolor=blue
-}
 
 % =======================================================
 % 7. OPTIONAL MODES
@@ -188,6 +173,7 @@ $header-includes$
 % =======================================================
 % TITLE LOGIC
 % =======================================================
+
 $if(titlepage)$
 \begin{titlepage}
 \vspace*{0.06\textheight}
@@ -215,18 +201,8 @@ $if(author.affiliation)$
 $author.affiliation$\par
 $endif$
 
-$if(author.address)$
-$for(author.address)$
-$author.address$\par
-$endfor$
-$endif$
-
 $if(author.email)$
 \texttt{$author.email$}\par
-$endif$
-
-$if(author.url)$
-\texttt{$author.url$}\par
 $endif$
 
 $if(author.orcid)$
@@ -298,7 +274,7 @@ $endif$
 $body$
 
 % =======================================================
-% REFERENCES (page break if bibliography present)
+% REFERENCES
 % =======================================================
 $if(bibliography)$
 \clearpage
