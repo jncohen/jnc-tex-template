@@ -10,7 +10,7 @@
   \usepackage{mathpazo}
 \else
   \usepackage{fontspec}
-  \setmainfont{TeX Gyre Pagella}
+  \setmainfont{Latin Modern Roman}
 \fi
 
 \usepackage{microtype}
@@ -164,6 +164,11 @@ $header-includes$
 \newcommand{\pkg}[1]{\texttt{#1}}
 \newcommand{\CRANpkg}[1]{\texttt{#1}}
 \newcommand{\code}[1]{\texttt{#1}}
+
+
+% --- Pandoc table width arithmetic support ---
+\usepackage{calc}
+\providecommand{\real}[1]{#1}
 
 % =======================================================
 % BEGIN DOCUMENT
