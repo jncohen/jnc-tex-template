@@ -104,10 +104,25 @@ $endif$
 % 6. HYPERREF
 % =======================================================
 \usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
 
 % =======================================================
 % 7. OPTIONAL MODES
 % =======================================================
+$if(anonymize)$
+\newif\ifjncanon
+\jncanontrue
+$else$
+\newif\ifjncanon
+\jncanonfalse
+$endif$
+
+$if(maincolumns)$
+\newcommand{\jncmaincolumns}{$maincolumns$}
+$else$
+\newcommand{\jncmaincolumns}{1}
+$endif$
+
 $if(linenumbers)$
 \usepackage{lineno}
 \linenumbers
@@ -128,6 +143,20 @@ $highlighting-macros$
 $endif$
 
 $header-includes$
+
+
+% =======================================================
+% RUNNING TITLE
+% =======================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+
+$if(runningtitle)$
+\fancyhead[L]{\small\itshape $runningtitle$}
+$else$
+\fancyhead[L]{\small\itshape $title$}
+$endif$
 
 % =======================================================
 % 9. CSL REFERENCES (Pandoc)
@@ -188,7 +217,11 @@ $if(titlepage)$
 
 $if(subtitle)$
 \vspace{0.25em}
+\ifjncanon
+{\large [Subtitle removed for anonymous review]\par}
+\else
 {\large $subtitle$\par}
+\fi
 $endif$
 
 \vspace{2em}
@@ -197,6 +230,11 @@ $endif$
 {\normalsize
 
 $for(author)$
+\ifjncanon
+\textbf{Anonymous Author}\par
+Affiliation withheld for anonymous review\par
+\vspace{0.5em}
+$else$
 $if(blind)$
 \textbf{Anonymous Author}\par
 $else$
@@ -213,10 +251,42 @@ $endif$
 $if(author.orcid)$
 ORCID: $author.orcid$\par
 $endif$
+
+$if(author.address)$
+$author.address$\par
+$endif$
+
+$if(author.web)$
+Web: \url{$author.web$}\par
+$endif$
+
+$if(author.url)$
+Web: \url{$author.url$}\par
+$endif$
+$endif$
 $endif$
 
 \vspace{0.5em}
 $endfor$
+
+\ifjncanon
+\textit{All identifying details have been removed for anonymous review.}\par
+\fi
+
+$if(date)$
+\ifjncanon
+Date withheld for anonymous review\par
+\else
+Date: $date$\par
+\fi
+$else$
+\ifjncanon
+Date withheld for anonymous review\par
+\else
+Date: \today\par
+\fi
+$endif$
+
 
 }
 \end{singlespace}
@@ -228,7 +298,11 @@ $endfor$
 \singlespacing
 \textbf{Abstract}\par
 \vspace{0.25em}
+\ifjncanon
+[Abstract hidden for anonymous review.]
+\else
 $abstract$
+\fi
 
 $if(keywords)$
 \vspace{1em}
@@ -241,12 +315,16 @@ $endif$
 \end{center}
 
 $if(acknowledgements)$
+\ifjncanon
+% acknowledgements suppressed during anonymous review
+\else
 \vfill
 \noindent\rule{0.3\textwidth}{0.4pt}\par
 \footnotesize
 \textbf{Acknowledgements}\par
 $acknowledgements$
 \normalsize
+\fi
 $endif$
 
 \end{titlepage}
@@ -254,8 +332,17 @@ $endif$
 $else$
 
 \title{$title$}
+\ifjncanon
+\author{Anonymous Author(s)}
+\date{Date withheld for anonymous review}
+\else
 \author{$for(author)$$author.name$$sep$ \\ $endfor$}
-\date{}
+$if(date)$
+\date{$date$}
+$else$
+\date{\today}
+$endif$
+\fi
 \maketitle
 
 $endif$
@@ -275,6 +362,22 @@ $endif$
   \fi
 }
 \makeatother
+
+% Main text column layout toggle
+\ifnum\jncmaincolumns=2
+  \twocolumn
+\else
+  \onecolumn
+\fi
+
+\ifjncanon
+\begingroup
+\small
+\noindent\textit{This manuscript is set to anonymous mode. Identifying metadata fields are automatically suppressed.}\par
+\endgroup
+\vspace{1em}
+\fi
+
 
 $body$
 
