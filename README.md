@@ -31,19 +31,61 @@ document class replacement.
   ------------------ -------------------------------------------------
   `titlepage`        Use dedicated title page vs `\maketitle`
   `blind`            Anonymize author block (for review submissions)
+  `anonymize`        Suppress identifying metadata and review-sensitive sections
   `doublespace`      Double spacing (else 1.5 spacing)
   `linenumbers`      Enable line numbers
   `numbersections`   Toggle section numbering
+  `maincolumns`      Set body text columns (`1` or `2`)
+  `runningtitle`     Set short running header text
 
 Example:
 
 ``` yaml
 titlepage: true
 blind: false
+anonymize: false
 doublespace: false
 linenumbers: false
 numbersections: true
+maincolumns: 1
+runningtitle: "Short Running Title"
 ```
+
+### Title Page Metadata
+
+The template supports richer title-page metadata from Pandoc/Quarto
+author objects. For each author you can include:
+
+- `name`
+- `affiliation`
+- `email`
+- `orcid`
+- `address`
+- `web` (or `url`)
+
+It also supports top-level `date` and `subtitle`.
+
+Example:
+
+```yaml
+title: "My Manuscript"
+subtitle: "An optional subtitle"
+date: "2026-02-22"
+runningtitle: "My Manuscript"
+titlepage: true
+maincolumns: 2
+anonymize: false
+author:
+  - name: "Jane Doe"
+    affiliation: "Department of Economics, University X"
+    email: "jane@university.edu"
+    orcid: "0000-0000-0000-0000"
+    address: "123 Academic Way, City, Country"
+    web: "https://janedoe.example"
+```
+
+When `anonymize: true`, identifying fields are replaced/suppressed in
+the rendered front matter and acknowledgements are hidden.
 
 ------------------------------------------------------------------------
 
@@ -90,5 +132,4 @@ This template is designed for:
 
 It is not intended to replace journal-specific `.cls` files where
 required.
-
 
