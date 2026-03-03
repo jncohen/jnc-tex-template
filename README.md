@@ -29,9 +29,7 @@ document class replacement.
 
   Variable           Effect
   ------------------ -------------------------------------------------
-  `titlepage`        Use dedicated title page vs `\maketitle`
-  `blind`            Anonymize author block (for review submissions)
-  `anonymize`        Suppress identifying metadata and review-sensitive sections
+  `anonymize`        Suppress all identifying metadata (authors, date, acknowledgements) for blind review
   `doublespace`      Double spacing (else 1.5 spacing)
   `linenumbers`      Enable line numbers
   `numbersections`   Toggle section numbering
@@ -41,8 +39,6 @@ document class replacement.
 Example:
 
 ``` yaml
-titlepage: true
-blind: false
 anonymize: false
 doublespace: false
 linenumbers: false
@@ -51,42 +47,46 @@ maincolumns: 1
 runningtitle: "Short Running Title"
 ```
 
-### Title Page Metadata
+### Title Page
 
-The template supports richer title-page metadata from Pandoc/Quarto
-author objects. For each author you can include:
+The template always uses a dedicated title page. Metadata is populated
+from Pandoc/Quarto YAML. The author block supports both structured author
+objects and plain scalar strings.
+
+For each structured author you can include:
 
 - `name`
 - `affiliation`
 - `email`
 - `orcid`
-- `address`
-- `web` (or `url`)
 
-It also supports top-level `date` and `subtitle`.
+It also supports top-level `date`, `subtitle`, `abstract`, `keywords`,
+and `acknowledgements`.
 
 Example:
 
 ```yaml
 title: "My Manuscript"
 subtitle: "An optional subtitle"
-date: "2026-02-22"
+date: "2026-03-03"
 runningtitle: "My Manuscript"
-titlepage: true
-maincolumns: 2
 anonymize: false
+abstract: |
+  This paper examines...
+keywords:
+  - sociology
+  - quantitative methods
 author:
   - name: "Jane Doe"
-    affiliation: "Department of Economics, University X"
+    affiliation: "Department of Sociology, University X"
     email: "jane@university.edu"
     orcid: "0000-0000-0000-0000"
-    address: "123 Academic Way, City, Country"
-    web: "https://janedoe.example"
+acknowledgements: |
+  The author thanks...
 ```
 
-When `anonymize: true`, identifying fields are replaced/suppressed in
-the rendered front matter and acknowledgements are hidden.
-
+When `anonymize: true`, all identifying fields (authors, date,
+acknowledgements) are suppressed from the rendered title page.
 
 ------------------------------------------------------------------------
 
@@ -103,21 +103,21 @@ format:
 ## Usage (Pandoc CLI)
 
 ``` bash
-pandoc paper.md   --template=jnctemplate.tex   -o paper.pdf
+pandoc paper.md --template=jnctemplate.tex -o paper.pdf
 ```
 
 ------------------------------------------------------------------------
 
 ## Typography and Layout
 
--   Palatino-style typography (`mathpazo` / `TeX Gyre Pagella`)
+-   Palatino-style typography (`mathpazo` / `Latin Modern Roman` for XeLaTeX/LuaLaTeX)
 -   1-inch margins
--   Controlled float density
+-   1.5 spacing default (double spacing optional)
+-   Deterministic float spacing (`intextsep`, `textfloatsep`)
 -   Scaled images to prevent overflow
 -   Structured `longtable` handling
 -   Bold, small captions
--   Clean section hierarchy via `titlesec`
-
+-   Clean section hierarchy via `titlesec` (section / subsection / subsubsection)
 
 ------------------------------------------------------------------------
 
@@ -127,11 +127,8 @@ This template is designed for:
 
 -   Empirical research articles
 -   Quantitative manuscripts
--   Software-method papers
 -   Working papers
 -   Blind review submissions
 
 It is not intended to replace journal-specific `.cls` files where
 required.
-
-
