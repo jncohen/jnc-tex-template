@@ -32,9 +32,10 @@ document class replacement.
   `anonymize`        Suppress all identifying metadata (authors, date, acknowledgements) for blind review
   `doublespace`      Double spacing (else 1.5 spacing)
   `linenumbers`      Enable line numbers
+  `maincolumns`      Set body text columns (`1` or `2`); `maincolumns: 2` enables two-column layout starting after the title page
   `numbersections`   Toggle section numbering
-  `maincolumns`      Set body text columns (`1` or `2`)
-  `runningtitle`     Set short running header text
+  `runningtitle`     Short running header text (right-justified)
+  `surname`          Author surname for running header; if set, header renders as "Surname: Running Title"
 
 Example:
 
@@ -57,16 +58,24 @@ delimited by `---`.
 ---
 title: "My Manuscript Title"
 subtitle: "An Optional Subtitle"
-date: "2026-03-03"
+date: "March 2026"
+surname: "Cohen"
 runningtitle: "Short Running Title"
 
 author:
   - name: "Jane Doe"
-    affiliation: "Department of Sociology, University X"
+    department: "Department of Sociology"
+    institution: "University X"
+    address: "123 Main Street"
+    city: "New York, NY"
+    zip: "10001"
+    country: "USA"
     email: "jane@university.edu"
+    web: "[jane.example.edu](https://jane.example.edu)"
     orcid: "0000-0000-0000-0001"
   - name: "John Smith"
-    affiliation: "Department of Economics, University Y"
+    department: "Department of Economics"
+    institution: "University Y"
     email: "jsmith@university.edu"
     orcid: "0000-0000-0000-0002"
 
@@ -91,6 +100,24 @@ numbersections: false
 maincolumns: 1
 ---
 ```
+
+**Author field reference:**
+
+  Field            Required   Notes
+  ---------------- ---------- -----------------------------------------------
+  `name`           Yes        Rendered in bold
+  `department`     No         Printed below name
+  `institution`    No         Printed below department
+  `affiliation`    No         Legacy single-string fallback; printed if department/institution absent
+  `address`        No         Street address
+  `city`           No         Combined with `zip` and `country` on one line
+  `zip`            No         —
+  `country`        No         —
+  `email`          No         Rendered in monospace
+  `web`            No         Use Markdown link syntax: `[label](url)`
+  `orcid`          No         Displayed as plain text
+
+The `web` field accepts Pandoc Markdown link syntax: `"[My site](https://example.edu)"` renders as a hyperlink; a bare URL renders as plain text.
 
 The `bibliography` field points to your `.bib` file (relative path from
 the source document). The `csl` field controls citation style; `default.csl`
@@ -121,6 +148,24 @@ poorly or not at all. Set the Zotero item type as follows:
 
 When `anonymize: true`, all identifying fields — authors, date,
 acknowledgements — are suppressed from the rendered title page.
+
+### Entering R Packages in Zotero (Software type)
+
+For an R package such as one hosted on CRAN, use **Item Type: Software** and fill in the fields as follows:
+
+  Zotero Field     Value
+  ---------------- -------------------------------------------------------------
+  Title            Package name, optionally expanded: `scf: Survey of Consumer Finances`
+  Author           Authors listed in the package `DESCRIPTION` file
+  Version          Package version number (from CRAN page or `packageVersion()`)
+  Date             Release date of the version cited
+  Publisher        `CRAN` (or `GitHub` for development versions)
+  URL              Canonical URL, e.g. `https://cran.r-project.org/package=scf`
+  Accessed         Date you retrieved it (for the retrieval statement)
+
+Leave the `Extra` field blank unless you need to override CSL-specific behavior. The CSL software type renders as:
+
+> Author, A. (Year). *Title* (Version x.x) [Computer software]. Publisher. URL
 
 ------------------------------------------------------------------------
 

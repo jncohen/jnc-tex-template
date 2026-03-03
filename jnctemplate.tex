@@ -174,10 +174,18 @@ $header-includes$
   \fancyfoot[C]{\thepage}
 }
 
+$if(surname)$
 $if(runningtitle)$
-\fancyhead[L]{\small\itshape $runningtitle$}
+\fancyhead[R]{\small\itshape $surname$: $runningtitle$}
 $else$
-\fancyhead[L]{\small\itshape $title$}
+\fancyhead[R]{\small\itshape $surname$}
+$endif$
+$else$
+$if(runningtitle)$
+\fancyhead[R]{\small\itshape $runningtitle$}
+$else$
+\fancyhead[R]{\small\itshape $title$}
+$endif$
 $endif$
 
 % =======================================================
@@ -252,11 +260,26 @@ $for(author)$
 % Case 1: structured author item (has .name)
 $if(author.name)$
 \textbf{$author.name$}\par
+$if(author.department)$
+$author.department$\par
+$endif$
+$if(author.institution)$
+$author.institution$\par
+$endif$
 $if(author.affiliation)$
 $author.affiliation$\par
 $endif$
+$if(author.address)$
+$author.address$\par
+$endif$
+$if(author.city)$
+$author.city$$if(author.zip)$, $author.zip$$endif$$if(author.country)$, $author.country$$endif$\par
+$endif$
 $if(author.email)$
 \texttt{$author.email$}\par
+$endif$
+$if(author.web)$
+$author.web$\par
 $endif$
 $if(author.orcid)$
 ORCID: $author.orcid$\par
