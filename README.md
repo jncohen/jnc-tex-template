@@ -159,7 +159,7 @@ For an R package such as one hosted on CRAN, use **Item Type: Software** and fil
   Author           Authors listed in the package `DESCRIPTION` file
   Version          Package version number (from CRAN page or `packageVersion()`)
   Date             Release date of the version cited
-  Publisher        `CRAN` (or `GitHub` for development versions)
+  Company          `CRAN` (or `GitHub` for development versions) — this is Zotero's label for the CSL publisher field
   URL              Canonical URL, e.g. `https://cran.r-project.org/package=scf`
   Accessed         Date you retrieved it (for the retrieval statement)
 

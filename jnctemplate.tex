@@ -10,10 +10,11 @@
   \usepackage{mathpazo}
 \else
   \usepackage{fontspec}
-  \setmainfont{Latin Modern Roman}
+  \setmainfont{TeX Gyre Pagella}
 \fi
 
 \usepackage{microtype}
+\usepackage{amsmath,amssymb}
 \providecommand{\citeproc}[2]{#2}
 
 % =======================================================
@@ -93,7 +94,7 @@ $if(numbersections)$
     {\thesubsection}{1em}{}
 
   \titleformat{\subsubsection}
-    {\normalsize\bfseries}
+    {\normalsize\bfseries\itshape}
     {\thesubsubsection}{1em}{}
 $else$
   \setcounter{secnumdepth}{0}
@@ -108,7 +109,7 @@ $else$
     {}{0pt}{}
 
   \titleformat{\subsubsection}
-    {\normalsize\bfseries}
+    {\normalsize\bfseries\itshape}
     {}{0pt}{}
 $endif$
 
@@ -121,11 +122,10 @@ $endif$
 % =======================================================
 % 7. OPTIONAL MODES
 % =======================================================
-$if(anonymize)$
 \newif\ifjncanon
+$if(anonymize)$
 \jncanontrue
 $else$
-\newif\ifjncanon
 \jncanonfalse
 $endif$
 
@@ -348,7 +348,6 @@ $endif$
 
 \clearpage
 \setcounter{page}{1}
-\thispagestyle{plain}
 
 % =======================================================
 % MAIN BODY
