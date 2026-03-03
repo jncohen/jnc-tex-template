@@ -82,7 +82,7 @@ acknowledgements: |
   The authors thank... Funding provided by...
 
 bibliography: references.bib
-csl: american-sociological-review.csl
+csl: default.csl
 
 anonymize: false
 doublespace: false
@@ -93,11 +93,31 @@ maincolumns: 1
 ```
 
 The `bibliography` field points to your `.bib` file (relative path from
-the source document). The `csl` field controls citation style; omit it
-to use Pandoc's default (Chicago author-date). Common choices for
-sociology include `american-sociological-review.csl` and
-`american-journal-of-sociology.csl`, both available from the
-[Zotero CSL repository](https://www.zotero.org/styles).
+the source document). The `csl` field controls citation style; `default.csl`
+(bundled) uses author-date format with enhanced support for modern source
+types (see below). To use a different style, replace it with any CSL file
+from the [Zotero CSL repository](https://www.zotero.org/styles).
+
+### Supported Source Types in `default.csl`
+
+The bundled CSL handles modern source types that standard styles format
+poorly or not at all. Set the Zotero item type as follows:
+
+  Source                          Zotero Item Type     Notes
+  ------------------------------- -------------------- -------------------------------------------
+  Journal article                 Journal Article      DOI shown automatically
+  Book                            Book                 —
+  Book chapter                    Book Section         —
+  Dissertation / thesis           Thesis               Set Type field (PhD, MA, etc.)
+  Technical / institutional report Report              Set Type and Report Number
+  Preprint / working paper        Manuscript           Set Genre: "Working Paper", "Preprint", etc.
+  Research dataset                Dataset              Set Version and Publisher (repository)
+  R package / software            Software             Set Version; Publisher = CRAN or GitHub
+  Blog post                       Blog Post            Set Accessed date for retrieval statement
+  Social media post               Forum Post           Set container-title to platform name
+  YouTube video / podcast         Video Recording      Set Genre: [Video] or [Podcast episode]
+  Conference presentation         Presentation         —
+  General web page                Web Page             Set Accessed date for retrieval statement
 
 When `anonymize: true`, all identifying fields — authors, date,
 acknowledgements — are suppressed from the rendered title page.
