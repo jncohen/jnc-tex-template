@@ -47,46 +47,60 @@ maincolumns: 1
 runningtitle: "Short Running Title"
 ```
 
-### Title Page
+### Complete YAML Header
 
-The template always uses a dedicated title page. Metadata is populated
-from Pandoc/Quarto YAML. The author block supports both structured author
-objects and plain scalar strings.
-
-For each structured author you can include:
-
-- `name`
-- `affiliation`
-- `email`
-- `orcid`
-
-It also supports top-level `date`, `subtitle`, `abstract`, `keywords`,
-and `acknowledgements`.
-
-Example:
+The following is a full working YAML header illustrating all supported
+fields. Place this at the top of your `.md` or `.qmd` source file,
+delimited by `---`.
 
 ```yaml
-title: "My Manuscript"
-subtitle: "An optional subtitle"
+---
+title: "My Manuscript Title"
+subtitle: "An Optional Subtitle"
 date: "2026-03-03"
-runningtitle: "My Manuscript"
-anonymize: false
-abstract: |
-  This paper examines...
-keywords:
-  - sociology
-  - quantitative methods
+runningtitle: "Short Running Title"
+
 author:
   - name: "Jane Doe"
     affiliation: "Department of Sociology, University X"
     email: "jane@university.edu"
-    orcid: "0000-0000-0000-0000"
+    orcid: "0000-0000-0000-0001"
+  - name: "John Smith"
+    affiliation: "Department of Economics, University Y"
+    email: "jsmith@university.edu"
+    orcid: "0000-0000-0000-0002"
+
+abstract: |
+  This paper examines... [150–250 words recommended]
+
+keywords:
+  - sociology
+  - quantitative methods
+  - open science
+
 acknowledgements: |
-  The author thanks...
+  The authors thank... Funding provided by...
+
+bibliography: references.bib
+csl: american-sociological-review.csl
+
+anonymize: false
+doublespace: false
+linenumbers: false
+numbersections: false
+maincolumns: 1
+---
 ```
 
-When `anonymize: true`, all identifying fields (authors, date,
-acknowledgements) are suppressed from the rendered title page.
+The `bibliography` field points to your `.bib` file (relative path from
+the source document). The `csl` field controls citation style; omit it
+to use Pandoc's default (Chicago author-date). Common choices for
+sociology include `american-sociological-review.csl` and
+`american-journal-of-sociology.csl`, both available from the
+[Zotero CSL repository](https://www.zotero.org/styles).
+
+When `anonymize: true`, all identifying fields — authors, date,
+acknowledgements — are suppressed from the rendered title page.
 
 ------------------------------------------------------------------------
 
