@@ -10,7 +10,11 @@
   \usepackage{mathpazo}
 \else
   \usepackage{fontspec}
-  \setmainfont{TeX Gyre Pagella}
+  \IfFontExistsTF{TeX Gyre Pagella}{
+    \setmainfont{TeX Gyre Pagella}
+  }{
+    \setmainfont{Latin Modern Roman}
+  }
 \fi
 
 \usepackage{microtype}
