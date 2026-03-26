@@ -2,19 +2,163 @@
 
 % =======================================================
 % 1. ENGINE + TYPOGRAPHY
+%
+% Font presets are controlled by the 'fontset' YAML variable.
+% Valid values: humanities | demography | methods | (unset = default)
+%
+%   fontset: humanities  -> EB Garamond         (XeLaTeX/LuaLaTeX)
+%                           mathpazo + warning  (pdfLaTeX)
+%   fontset: demography  -> XITS                (XeLaTeX/LuaLaTeX)
+%                           TeX Gyre Termes     (pdfLaTeX)
+%   fontset: methods     -> Source Serif 4 + Fira Code (XeLaTeX/LuaLaTeX)
+%                           mathpazo + Fira Code or LM Mono (pdfLaTeX)
+%   (default/unset)      -> TeX Gyre Pagella    (XeLaTeX/LuaLaTeX)
+%                           mathpazo            (pdfLaTeX)
+%
+% XeLaTeX/LuaLaTeX fonts are loaded from a local fonts/ directory so the
+% bundle is self-contained regardless of system font installation.
+% The 'fontpath' YAML variable overrides the default 'fonts/' relative path
+% with an absolute path --- required when using the managed template layout
+% (e.g., template: ~/Templates/jnc-tex/jnctemplate.tex).
+% Example: fontpath: /Users/yourname/Templates/jnc-tex/fonts/
 % =======================================================
 \usepackage{iftex}
 
+%% --- FONT PRESET MACRO (set from YAML, used for \ifx branching below) ---
+$if(fontset)$
+\def\jncfontset{$fontset$}
+$else$
+\def\jncfontset{}
+$endif$
+\def\jncfontset@h{humanities}
+\def\jncfontset@d{demography}
+\def\jncfontset@m{methods}
+
+%% --- FONT PATH (override with 'fontpath:' YAML variable for managed templates) ---
+$if(fontpath)$
+\def\jncfontsdir{$fontpath$}
+$else$
+\def\jncfontsdir{fonts/}
+$endif$
+
+%% --- FONT LOADING ---
+
 \ifPDFTeX
+  %% pdfLaTeX path: uses TeX distribution packages only (no font files needed).
   \usepackage[T1]{fontenc}
-  \usepackage{mathpazo}
+  \ifx\jncfontset\jncfontset@d
+    %% demography: TeX Gyre Termes (Times-family); ships with every TeXLive/MiKTeX.
+    \usepackage{tgtermes}
+  \else
+    \usepackage{mathpazo}
+    \ifx\jncfontset\jncfontset@h
+      %% humanities: EB Garamond requires XeLaTeX/LuaLaTeX; mathpazo used instead.
+      \PackageWarning{jnctemplate}{fontset=humanities: EB Garamond requires
+        XeLaTeX/LuaLaTeX. Falling back to mathpazo under pdfLaTeX.}
+    \fi
+    \ifx\jncfontset\jncfontset@m
+      %% methods: try Fira Code for monospace; fall back to Latin Modern Mono.
+      \IfFileExists{FiraCode.sty}{%
+        \usepackage{FiraCode}%
+      }{%
+        \PackageWarning{jnctemplate}{fontset=methods: Fira Code not found in the
+          TeX distribution. Using Latin Modern Mono. Install the 'firacode'
+          package (TeXLive: tlmgr install firacode).}%
+      }
+    \fi
+  \fi
 \else
+  %% XeLaTeX / LuaLaTeX path: uses fontspec with bundled fonts from fonts/ dir.
+  %% Each preset uses \IfFileExists to fail gracefully if fonts/ is not populated.
+  %% Run scripts/get-fonts.sh to download font files into fonts/.
   \usepackage{fontspec}
-  \IfFontExistsTF{TeX Gyre Pagella}{
-    \setmainfont{TeX Gyre Pagella}
-  }{
-    \setmainfont{Latin Modern Roman}
-  }
+  \ifx\jncfontset\jncfontset@h
+    \IfFileExists{\jncfontsdir EBGaramond-Regular.otf}{%
+      \setmainfont{EBGaramond}[
+        Path           = \jncfontsdir,
+        UprightFont    = *-Regular,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-Italic,
+        BoldItalicFont = *-BoldItalic,
+        Extension      = .otf]%
+    }{%
+      \PackageWarning{jnctemplate}{fontset=humanities: \jncfontsdir
+        EBGaramond-Regular.otf not found. Run scripts/get-fonts.sh, or set
+        fontpath: in YAML if using a managed template. Falling back to default.}%
+      \IfFontExistsTF{TeX Gyre Pagella}{%
+        \setmainfont{TeX Gyre Pagella}%
+      }{%
+        \PackageWarning{jnctemplate}{TeX Gyre Pagella not found; using Latin Modern Roman.}%
+        \setmainfont{Latin Modern Roman}%
+      }%
+    }
+  \else\ifx\jncfontset\jncfontset@d
+    \IfFileExists{\jncfontsdir XITS-Regular.otf}{%
+      \setmainfont{XITS}[
+        Path           = \jncfontsdir,
+        UprightFont    = *-Regular,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-Italic,
+        BoldItalicFont = *-BoldItalic,
+        Extension      = .otf]%
+    }{%
+      \PackageWarning{jnctemplate}{fontset=demography: \jncfontsdir
+        XITS-Regular.otf not found. Run scripts/get-fonts.sh, or set
+        fontpath: in YAML if using a managed template. Falling back to default.}%
+      \IfFontExistsTF{TeX Gyre Pagella}{%
+        \setmainfont{TeX Gyre Pagella}%
+      }{%
+        \PackageWarning{jnctemplate}{TeX Gyre Pagella not found; using Latin Modern Roman.}%
+        \setmainfont{Latin Modern Roman}%
+      }%
+    }
+  \else\ifx\jncfontset\jncfontset@m
+    \IfFileExists{\jncfontsdir SourceSerif4-Regular.otf}{%
+      \setmainfont{SourceSerif4}[
+        Path           = \jncfontsdir,
+        UprightFont    = *-Regular,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-It,
+        BoldItalicFont = *-BoldIt,
+        Extension      = .otf]%
+    }{%
+      \PackageWarning{jnctemplate}{fontset=methods: \jncfontsdir
+        SourceSerif4-Regular.otf not found. Run scripts/get-fonts.sh, or set
+        fontpath: in YAML if using a managed template. Falling back to default.}%
+      \IfFontExistsTF{TeX Gyre Pagella}{%
+        \setmainfont{TeX Gyre Pagella}%
+      }{%
+        \PackageWarning{jnctemplate}{TeX Gyre Pagella not found; using Latin Modern Roman.}%
+        \setmainfont{Latin Modern Roman}%
+      }%
+    }
+    \IfFileExists{\jncfontsdir FiraCode-Regular.ttf}{%
+      \setmonofont{FiraCode}[
+        Path        = \jncfontsdir,
+        UprightFont = *-Regular,
+        BoldFont    = *-Bold,
+        Extension   = .ttf]%
+    }{%
+      \PackageWarning{jnctemplate}{fontset=methods: \jncfontsdir
+        FiraCode-Regular.ttf not found. Run scripts/get-fonts.sh to install
+        Fira Code. Using default monospace font.}%
+    }
+  \else
+    %% Default or unrecognized fontset: TeX Gyre Pagella with graceful fallback.
+    \ifx\jncfontset\empty\else
+      \PackageWarning{jnctemplate}{Unknown fontset value '\jncfontset'.
+        Valid values: humanities, demography, methods. Using default.}
+    \fi
+    \IfFontExistsTF{TeX Gyre Pagella}{%
+      \setmainfont{TeX Gyre Pagella}%
+    }{%
+      %% ISSUE 1 FIX: emit warning when TeX Gyre Pagella is unavailable.
+      \PackageWarning{jnctemplate}{TeX Gyre Pagella not found on this system.
+        Using Latin Modern Roman as fallback. Install tex-gyre for the intended
+        Palatino-family appearance.}%
+      \setmainfont{Latin Modern Roman}%
+    }
+  \fi\fi\fi
 \fi
 
 \usepackage{microtype}
@@ -142,6 +286,13 @@ $endif$
 $if(linenumbers)$
 \usepackage{lineno}
 \linenumbers
+%% KNOWN ISSUE: lineno + setspace interaction.
+%% Line numbers may visually mis-align at 1.5x or 2x spacing because lineno
+%% places marks at physical TeX line intervals, not visual double-spaced lines.
+%% The line-number counter still advances correctly; only the gutter position
+%% drifts. A structural fix requires patching lineno internals and is deferred.
+%% Workaround: use onehalfspacing (not doublespace) for line-numbered drafts,
+%% or treat the visual offset as cosmetic.
 $endif$
 
 % =======================================================
@@ -158,6 +309,10 @@ $if(highlighting-macros)$
 $highlighting-macros$
 $endif$
 
+%% NOTE (Issue 5): knitr/Quarto may inject booktabs, float, longtable, or
+%% other packages already loaded above via header-includes. This is benign ---
+%% LaTeX's \usepackage deduplicates package loading --- but may produce harmless
+%% "already loaded" notes in verbose log output. No action required.
 $header-includes$
 
 % --- Pandoc table width arithmetic support ---
@@ -202,6 +357,10 @@ $endif$
 
 \newenvironment{CSLReferences}[2]
  {%
+  %% ISSUE 3 FIX: revert to single column before references when maincolumns: 2.
+  %% \twocolumn persists through $body$ into the bibliography section otherwise.
+  %% \onecolumn forces a page break (standard behavior for two-column papers).
+  \ifnum\jncmaincolumns=2\relax\onecolumn\fi
   \section*{References}
   \begin{list}{}{%
    \setlength{\itemindent}{0pt}
@@ -300,6 +459,11 @@ $endfor$
 $endif$
 
 % --- DATE (optional; suppressed in anonymize mode) ---
+%% NOTE (Issue 4): Pandoc and knitr may silently convert human-readable date
+%% strings to ISO 8601 format (YYYY-MM-DD). To preserve a formatted string:
+%%   (a) Quote it:          date: "March 2026"
+%%   (b) Inline R (Rmd):    date: "`r format(Sys.Date(), '%B %Y')`"
+%%   (c) Raw LaTeX:         date: '\today'
 $if(date)$
 \ifjncanon
 % suppressed

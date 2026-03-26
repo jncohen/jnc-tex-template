@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash scripts/get-fonts.sh)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(curl -fsSL \"https://raw.githubusercontent.com/octaviopardo/EBGaramond12/master/fonts/otf/EBGaramond-Regular.otf\" -o /tmp/test_ebg.otf)",
+      "Bash(curl -fsSL \"https://raw.githubusercontent.com/octaviopardo/EBGaramond12/main/fonts/otf/EBGaramond-Regular.otf\" -o /tmp/test_ebg2.otf)",
+      "Bash(curl -fsSL \"https://raw.githubusercontent.com/aliftype/xits/master/XITS-Regular.otf\" -o /tmp/test_xits.otf)",
+      "Bash(curl -fsSL \"https://raw.githubusercontent.com/aliftype/xits/main/XITS-Regular.otf\" -o /tmp/test_xits2.otf)",
+      "Bash(curl -fsSL \"https://raw.githubusercontent.com/adobe-fonts/source-serif/release/OTF/SourceSerif4-Regular.otf\" -o /tmp/test_ss.otf)",
+      "Bash(curl -fsSL \"https://raw.githubusercontent.com/tonsky/FiraCode/master/distr/ttf/FiraCode-Regular.ttf\" -o /tmp/test_fc.ttf)",
+      "Bash(curl -s \"https://api.github.com/repos/tonsky/FiraCode/releases/latest\")",
+      "Bash(curl -fsSL \"https://raw.githubusercontent.com/tonsky/FiraCode/6.2/distr/ttf/FiraCode-Regular.ttf\" -o /tmp/fc_tag.ttf)",
+      "Bash(curl -s \"https://api.github.com/repos/tonsky/FiraCode/contents/distr/ttf?ref=6.2\")",
+      "Bash(curl -s \"https://api.github.com/repos/tonsky/FiraCode/contents/\")"
+    ]
+  }
+}
