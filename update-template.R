@@ -4,7 +4,7 @@
 # NOTE: If you installed jctex via devtools::install_github(), the preferred
 # update path is:
 #   devtools::install_github("jncohen/jnc-tex-template")
-#   jctex::jnc_use(overwrite = TRUE)
+#   jnctex::jnc_use(overwrite = TRUE)
 #
 # The jnc_update() function below is for non-package (manual) installs only.
 #

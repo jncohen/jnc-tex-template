@@ -22,7 +22,7 @@
 #' @return Invisibly returns `path`.
 #' @export
 jnc_use <- function(path = ".", overwrite = FALSE) {
-  pkg <- "jctex"
+  pkg <- "jnctex"
 
   template_src <- system.file("templates/jnctemplate.tex", package = pkg)
   fonts_src    <- system.file("fonts",                     package = pkg)
