@@ -29,7 +29,7 @@ jnc_use <- function(path = ".", overwrite = FALSE) {
   csl_src      <- system.file("csl/default.csl",          package = pkg)
 
   if (!nzchar(template_src)) {
-    stop("Package 'jctex' does not appear to be installed. ",
+    stop("Package 'jnctex' does not appear to be installed. ",
          "Run: devtools::install_github(\"jncohen/jnc-tex-template\")")
   }
 
