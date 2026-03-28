@@ -476,20 +476,20 @@ $endif$
 
 %% Shared author-block macro.
 %%
-%% Author names come from the $for(author)$ loop — Quarto passes author.name
+%% Author names come from the for(author) loop — Quarto passes author.name
 %% through its normalize-author.lua filter. All other author sub-fields
 %% (department, institution, email, orcid, etc.) are stripped by that filter
 %% and never reach the Pandoc template.
 %%
-%% Solution: supply contact details via top-level jnc_author_* YAML variables,
+%% Solution: supply contact details via top-level author_* YAML variables,
 %% which Quarto does not process and therefore passes through unchanged.
 %%
-%%   jnc_author_dept:   Department of Sociology
-%%   jnc_author_inst:   Queens College, City University of New York
-%%   jnc_author_addr:   65-30 Kissena Blvd., Queens, NY 11367, USA
-%%   jnc_author_email:  joseph.cohen@qc.cuny.edu
-%%   jnc_author_web:    https://jncohen.commons.gc.cuny.edu
-%%   jnc_author_orcid:  0000-0002-6197-4453
+%%   author_dept:   Department of Sociology
+%%   author_inst:   Queens College, City University of New York
+%%   author_addr:   65-30 Kissena Blvd., Queens, NY 11367, USA
+%%   author_email:  joseph.cohen@qc.cuny.edu
+%%   author_web:    https://jncohen.commons.gc.cuny.edu
+%%   author_orcid:  0000-0002-6197-4453
 %%
 \newcommand{\jncauthorblock}{%
 $if(author)$
@@ -498,12 +498,12 @@ $for(author)$
 $if(author.name)$\textbf{$author.name$}$else$\textbf{$author$}$endif$\par
 $endfor$
 {\small\setlength{\parskip}{1pt}%
-$if(jnc_author_dept)$$jnc_author_dept$\par$endif$%
-$if(jnc_author_inst)$$jnc_author_inst$\par$endif$%
-$if(jnc_author_addr)$$jnc_author_addr$\par$endif$%
-$if(jnc_author_email)$\texttt{$jnc_author_email$}\par$endif$%
-$if(jnc_author_web)$$jnc_author_web$\par$endif$%
-$if(jnc_author_orcid)$ORCID: $jnc_author_orcid$\par$endif$%
+$if(author_dept)$$author_dept$\par$endif$%
+$if(author_inst)$$author_inst$\par$endif$%
+$if(author_addr)$$author_addr$\par$endif$%
+$if(author_email)$\texttt{$author_email$}\par$endif$%
+$if(author_web)$$author_web$\par$endif$%
+$if(author_orcid)$ORCID: $author_orcid$\par$endif$%
 }%
 \fi
 $endif$
