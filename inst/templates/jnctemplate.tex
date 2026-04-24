@@ -270,6 +270,13 @@ $endif$
 }
 
 % =======================================================
+% 4b. UNDERSCORE HANDLING FOR MARKDOWN TABLES
+% Treat underscores as literal text in tables and body text
+% (prevents LaTeX "Missing $ inserted" errors with variable names)
+% =======================================================
+\catcode`\_=12
+
+% =======================================================
 % 5. SECTION FORMATTING + NUMBERING TOGGLE
 %
 % default:    bold, no rule
