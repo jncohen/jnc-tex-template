@@ -103,12 +103,12 @@ date: "`r format(Sys.Date(), '%B %d, %Y')`"
 surname: "LastName"
 runningtitle: "Short Running Title"
 
-author-dept:  "Department of X"
-author-inst:  "Your University"
-author-addr:  "Street Address, City, State ZIP"
-author-email: "you@university.edu"
-author-web:   "https://yourwebsite.edu"
-author-orcid: "0000-0000-0000-0000"
+author_dept:  "Department of X"
+author_inst:  "Your University"
+author_addr:  "Street Address, City, State ZIP"
+author_email: "you@university.edu"
+author_web:   "https://yourwebsite.edu"
+author_orcid: "0000-0000-0000-0000"
 
 abstract: |
   Your abstract here (150-250 words recommended).
