@@ -96,16 +96,45 @@ Create a new R Markdown file (`paper.Rmd`) with this minimal YAML header:
 ```yaml
 ---
 title: "My Paper Title"
-author:
-  - name: "Your Name"
-output:
-  pdf_document:
-    template: jnctemplate.tex
+subtitle: "Optional subtitle"
+author: "Your Name"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+
+surname: "LastName"
+runningtitle: "Short Running Title"
+
+author-dept:  "Department of X"
+author-inst:  "Your University"
+author-addr:  "Street Address, City, State ZIP"
+author-email: "you@university.edu"
+author-web:   "https://yourwebsite.edu"
+author-orcid: "0000-0000-0000-0000"
+
+abstract: |
+  Your abstract here (150-250 words recommended).
+
+acknowledgements: |
+  Optional. Funding, data sources, etc.
+
 bibliography: references.bib
 csl: default.csl
+template: jnctemplate.tex
 fontpath: fonts/
+
+anonymize: false
+doublespace: false
+linenumbers: false
+numbersections: false
+maincolumns: 1
+fontset: demography
+
+header-includes:
+   - \usepackage{booktabs}
+   - \usepackage{pdflscape}
 ---
 ```
+
+**Important:** Do NOT use an `output:` block in the YAML. The template is Quarto-compatible and reads configuration directly from the top-level YAML fields shown above.
 
 Then write your document body in standard R Markdown below the `---`.
 
