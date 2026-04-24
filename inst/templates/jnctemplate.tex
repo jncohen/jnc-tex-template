@@ -267,14 +267,25 @@ $endif$
   \setlength{\LTleft}{0pt}
   \setlength{\LTright}{0pt}
   \setlength{\LTcapwidth}{\textwidth}
+  %% Treat special characters as ordinary text inside table cells.
+  %% Pandoc does not escape these when converting markdown tables,
+  %% so variable names (underscores), exponents (carets), and
+  %% percentage values (percent signs) cause LaTeX errors or silent
+  %% data loss. Catcode 12 (other) makes them literal characters
+  %% without affecting math mode or comments outside this environment.
+  \catcode95=12    %% underscore  (_): subscript operator
+  \catcode94=12    %% caret      (^): superscript operator
+  \catcode37=12    %% percent    (%): comment char -- silent data loss if unescaped
 }
 
 % =======================================================
-% 4b. UNDERSCORE HANDLING FOR MARKDOWN TABLES
-% Treat underscores as literal text in tables and body text
-% (prevents LaTeX "Missing dollar sign inserted" errors with variable names)
+% 4b. SPECIAL CHARACTER HANDLING IN BODY TEXT
 % =======================================================
-\catcode`\_=12
+%% \usepackage{underscore} makes _ safe in ordinary text mode
+%% (e.g. variable names mentioned inline in prose) while
+%% preserving its subscript role inside math environments.
+%% This complements the longtable catcode fix above.
+\usepackage{underscore}
 
 % =======================================================
 % 5. SECTION FORMATTING + NUMBERING TOGGLE
