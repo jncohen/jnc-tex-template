@@ -257,6 +257,63 @@ $endif$
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 
 % =======================================================
+% 3b. JOURNAL-STYLE FLOAT DEFERRAL
+%
+% Activated by: journal_style: true  (YAML)
+%
+% All figure and table float environments are deferred to after
+% the bibliography. A bold, centred placeholder marker is printed
+% in the text body wherever each float originally appeared.
+%
+% Uses the endfloat package (ships with TeXLive / MiKTeX).
+% Requires TWO compilation passes (the same two-pass requirement
+% as BibTeX / biber).
+%
+% Output order:
+%   1. Main text (with [Insert ...] markers)
+%   2. Bibliography
+%   3. Tables (one per page)
+%   4. Figures (one per page)
+%
+% IMPORTANT — longtable (Pandoc's default environment for plain
+% markdown table syntax) is a non-float and is NOT captured by
+% endfloat. For full deferral in journal_style mode, generate
+% tables as table floats rather than longtables:
+%   knitr / R:   knitr::kable(..., format="latex", longtable=FALSE)
+%   Raw LaTeX:   \begin{table}[p] ... \end{table}
+% See README § "Journal-Style Submission Mode" for details.
+%
+% Known incompatibilities:
+%   float [H] specifier — ignored; endfloat defers all floats.
+%   linenumbers + journal_style — may cause layout artefacts;
+%     avoid combining the two options.
+% =======================================================
+$if(journal_style)$
+\usepackage[nofiglist,notablist,tablesfirst]{endfloat}
+
+%% One float per page (standard journal convention)
+\renewcommand{\efloatseparator}{\clearpage}
+
+%% Bold centred placeholder for deferred figures
+\renewcommand{\figureplace}{%
+  \vspace{\baselineskip}%
+  \begin{center}%
+    \textbf{[Insert Figure \thefigure\ about here]}%
+  \end{center}%
+  \vspace{\baselineskip}%
+}
+
+%% Bold centred placeholder for deferred tables
+\renewcommand{\tableplace}{%
+  \vspace{\baselineskip}%
+  \begin{center}%
+    \textbf{[Insert Table \thetable\ about here]}%
+  \end{center}%
+  \vspace{\baselineskip}%
+}
+$endif$
+
+% =======================================================
 % 4. TABLE AUTOMATION (Pandoc longtable)
 % =======================================================
 \usepackage{etoolbox}

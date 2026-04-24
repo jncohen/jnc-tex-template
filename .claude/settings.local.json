@@ -12,7 +12,18 @@
       "Bash(curl -s \"https://api.github.com/repos/tonsky/FiraCode/releases/latest\")",
       "Bash(curl -fsSL \"https://raw.githubusercontent.com/tonsky/FiraCode/6.2/distr/ttf/FiraCode-Regular.ttf\" -o /tmp/fc_tag.ttf)",
       "Bash(curl -s \"https://api.github.com/repos/tonsky/FiraCode/contents/distr/ttf?ref=6.2\")",
-      "Bash(curl -s \"https://api.github.com/repos/tonsky/FiraCode/contents/\")"
+      "Bash(curl -s \"https://api.github.com/repos/tonsky/FiraCode/contents/\")",
+      "Bash(xargs grep:*)",
+      "Bash(find '/c/Program Files/RStudio/resources/app/bin/quarto/share' -name *.tex)",
+      "Bash(head -10 find '/c/Program Files/RStudio/resources/app/bin/quarto/share' -name template*)",
+      "Bash(find '/c/Program Files/RStudio/resources/app/bin/quarto/bin' -name *.js)",
+      "Bash(grep -n \"patched\\\\|templatePatch\\\\|citations\\\\.tex\\\\|csl-refs\\\\|\\\\\\\\end.document\" \"/c/Program Files/RStudio/resources/app/bin/quarto/bin/quarto.js\")",
+      "Bash(node:*)",
+      "Bash(\"/c/Program Files/RStudio/resources/app/bin/quarto/bin/tools/pandoc.exe\" --from markdown --to latex --template \"C:/Users/jcohen/Documents/GitHub/jnc-tex-template/inst/templates/jnctemplate.tex\")",
+      "Bash(PANDOC=\"/c/Program Files/RStudio/resources/app/bin/quarto/bin/tools/pandoc.exe\" PARTIAL_DIR=\"/c/Program Files/RStudio/resources/app/bin/quarto/share/formats/pdf/pandoc\" echo \"\")",
+      "Bash(\"$PANDOC\" --from markdown --to latex --template \"C:/Users/jcohen/Documents/GitHub/jnc-tex-template/inst/templates/jnctemplate.tex\" --template-partial \"$PARTIAL_DIR/tightlist.tex\" --template-partial \"$PARTIAL_DIR/citations.tex\" --template-partial \"$PARTIAL_DIR/biblio.tex\")",
+      "Bash(find /d/Dropbox/Research/anes24-antijewish-sentiment -name *.tex)",
+      "Bash(grep -n '\\\\$for\\(\\\\|\\\\$endfor\\\\|\\\\$if\\(\\\\|\\\\$endif' \"/d/Dropbox/Research/anes24-antijewish-sentiment/jnctemplate.tex\")"
     ]
   }
 }
