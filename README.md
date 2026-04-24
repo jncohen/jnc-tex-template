@@ -1,6 +1,6 @@
 # jnctex
 
-A personal LaTeX template for academic manuscripts, distributed as an R package. Designed for **R Markdown** workflows. All formatting is controlled via YAML front matter — no manual LaTeX editing required.
+A personal LaTeX template for academic manuscripts, distributed as an R package. Designed for **R Markdown** workflows. All formatting is controlled via YAML front matter -- no manual LaTeX editing required.
 
 ---
 
@@ -17,33 +17,30 @@ A personal LaTeX template for academic manuscripts, distributed as an R package.
 9. [Tables](#9-tables)
 10. [Figures](#10-figures)
 11. [Preparing for submission](#11-preparing-for-submission)
-12. [Journal-style mode](#12-journal-style-mode)
-13. [Quick reference: all YAML variables](#13-quick-reference-all-yaml-variables)
-14. [Bibliography: supported source types](#14-bibliography-supported-source-types)
-15. [Non-R installation](#15-non-r-installation)
+12. [Quick reference: all YAML variables](#12-quick-reference-all-yaml-variables)
+13. [Bibliography: supported source types](#13-bibliography-supported-source-types)
+14. [Non-R installation](#14-non-r-installation)
 
 ---
 
 ## 1. Prerequisites
 
-You need three things installed before using this template.
+You need R, RStudio, and a TeX distribution. If you already have all three, skip to Section 2.
 
-**R and RStudio.** If you are reading this you almost certainly have both. R >= 4.0 and a recent RStudio are sufficient.
+**R and RStudio.** R >= 4.0 and a recent RStudio are sufficient. RStudio bundles Pandoc, which handles the markdown-to-LaTeX conversion step.
 
-**A TeX distribution.** LaTeX does the actual typesetting. Install one of the following:
+**A TeX distribution.** LaTeX does the actual PDF typesetting. Most academic Windows users already have MiKTeX; most Mac users have MacTeX. If you need to install one:
 
-- **macOS** -- [MacTeX](https://www.tug.org/mactex/) (full install, ~5 GB) or `tinytex::install_tinytex()` in R (lightweight, installs on demand)
-- **Windows** -- [MiKTeX](https://miktex.org/) or `tinytex::install_tinytex()`
+- **macOS** -- [MacTeX](https://www.tug.org/mactex/) (~5 GB) or the lightweight `tinytex` R package
+- **Windows** -- [MiKTeX](https://miktex.org/) or the lightweight `tinytex` R package
 - **Linux** -- `sudo apt install texlive-full` (Debian/Ubuntu) or equivalent
 
-TinyTeX is the easiest option if you are starting fresh:
+TinyTeX is the easiest fresh install:
 
 ```r
 install.packages("tinytex")
 tinytex::install_tinytex()
 ```
-
-**Pandoc.** RStudio ships with Pandoc. If you compile from the R console outside RStudio, install Pandoc separately from [pandoc.org](https://pandoc.org/installing.html). Pandoc >= 2.11 is required.
 
 ---
 
@@ -55,8 +52,6 @@ Install the package from GitHub using `devtools`:
 install.packages("devtools")          # if not already installed
 devtools::install_github("jncohen/jnc-tex-template")
 ```
-
-This installs the R package, which contains the template file, bundled fonts, and the citation style.
 
 ---
 
@@ -137,7 +132,7 @@ fontset: methods       # Source Serif 4 + Fira Code -- SMR, computational work
 # (unset)             # TeX Gyre Pagella (Palatino-family) -- default
 ```
 
-Each preset adjusts the body font, margins, line spacing, and section heading style as a coordinated package. You do not need to tweak individual settings.
+Each preset adjusts the body font, margins, line spacing, and section heading style as a coordinated package.
 
 | Preset | Body font | Margins | Spacing | Headings |
 |---|---|---|---|---|
@@ -148,7 +143,7 @@ Each preset adjusts the body font, margins, line spacing, and section heading st
 
 **pdfLaTeX fallback.** The bundled fonts require XeLaTeX or LuaLaTeX, which R Markdown uses by default when the fonts are present. If you are using pdfLaTeX, the template falls back gracefully to TeX distribution fonts and emits a warning in the log.
 
-**Spacing override.** To force double spacing regardless of preset (common for journal submission):
+**Spacing override.** To force double spacing regardless of preset:
 
 ```yaml
 doublespace: true
@@ -181,8 +176,7 @@ author_orcid: "0000-0002-6197-4453"
 
 abstract: |
   This paper examines how organizational characteristics shape
-  wage determination. Using linked employer-employee data...
-  [150-250 words recommended]
+  wage determination. [150-250 words recommended]
 
 keywords:
   - wage inequality
@@ -194,9 +188,9 @@ acknowledgements: |
 ---
 ```
 
-**Running header.** The right-side running header renders as `Surname: Running Title` when both `surname` and `runningtitle` are set, `Running Title` alone when only `runningtitle` is set, and the document `title` when neither is set.
+**Running header.** Renders as `Surname: Running Title` when both `surname` and `runningtitle` are set, `Running Title` alone when only `runningtitle` is set, and the document `title` when neither is set.
 
-**Multiple authors.** Add additional `- name:` entries under `author:`. Contact details (`author_dept`, `author_inst`, etc.) appear once below all author names -- they are intended for the corresponding author.
+**Multiple authors.** Add additional `- name:` entries under `author:`. Contact details appear once below all author names -- they are intended for the corresponding author.
 
 ```yaml
 author:
@@ -211,34 +205,32 @@ author:
 
 ## 7. Writing body text
 
-The document body is standard R Markdown. A few things worth knowing for academic manuscripts.
+The document body is standard R Markdown.
 
-**Sections.** Use `#` for top-level sections, `##` for subsections, `###` for sub-subsections. By default, sections are unnumbered. To number them:
+**Sections.** Use `#` for top-level sections, `##` for subsections, `###` for sub-subsections. Sections are unnumbered by default. To number them:
 
 ```yaml
 numbersections: true
 ```
 
-**Section numbering depth** goes to three levels (1.2.3) when `numbersections: true`.
-
-**Paragraphs.** Leave a blank line between paragraphs. First-line indent is applied automatically -- do not add manual indentation.
+**Paragraphs.** Leave a blank line between paragraphs. First-line indent is applied automatically.
 
 **Emphasis.** `*italics*` and `**bold**`. Use italics for titles and foreign terms; use bold sparingly.
 
-**Footnotes.** Standard Pandoc footnote syntax:
+**Footnotes.**
 
 ```markdown
 This claim requires qualification.^[See the discussion in Smith (2018), who
 argues that the relationship is conditional on organizational size.]
 ```
 
-**Inline R.** knitr evaluates inline R expressions. Use this for reporting statistics so numbers stay in sync with your data:
+**Inline R.** knitr evaluates inline R expressions:
 
 ```markdown
 The sample includes `r nrow(df)` respondents across `r length(unique(df$firm_id))` firms.
 ```
 
-**Two-column layout.** For a two-column body (uncommon in sociology but used in some venues):
+**Two-column layout.**
 
 ```yaml
 maincolumns: 2
@@ -256,8 +248,6 @@ Citations are handled by Pandoc's built-in citation processor (citeproc) using y
 
 Create a `references.bib` file in your project folder. If you use **Zotero**, export your library (or a collection) using Better BibTeX: right-click -> Export Collection -> Better BibTeX -> keep file updated. The exported `.bib` file stays in sync as you add sources.
 
-Point the template at your bibliography in the YAML header:
-
 ```yaml
 bibliography: references.bib
 csl: default.csl
@@ -267,7 +257,7 @@ The bundled `default.csl` produces author-date citations in a Chicago-derived fo
 
 ### In-text citations
 
-Pandoc uses `@key` syntax for citations, where `key` is the BibTeX key in your `.bib` file.
+Pandoc uses `@key` syntax, where `key` is the BibTeX key in your `.bib` file.
 
 | Markdown | Output |
 |---|---|
@@ -277,27 +267,19 @@ Pandoc uses `@key` syntax for citations, where `key` is the BibTeX key in your `
 | `[@smith2020; @jones2018]` | (Smith 2020; Jones 2018) |
 | `[-@smith2020]` | (2020) -- suppresses author name |
 
-**RStudio visual editor.** If you use RStudio's visual markdown editor, use Insert -> Citation to search Zotero or DOI directly without typing BibTeX keys by hand.
+**RStudio visual editor.** Use Insert -> Citation to search Zotero or DOI directly without typing BibTeX keys by hand.
 
 ### Where the bibliography appears
 
-Pandoc automatically appends the bibliography at the end of the document body. You do not need to add any special command or section header -- the References heading is generated automatically.
+Pandoc automatically appends the bibliography at the end of the document body. The References heading is generated automatically. To force a page break before it, add `\clearpage` at the end of your body text.
 
-To force a page break before the references section, add this at the end of your document body:
-
-```markdown
-\clearpage
-```
-
-Or place the bibliography under a manual heading by adding this at the very end of your `.Rmd`:
+To place the bibliography under a manual heading, add this at the very end of your `.Rmd`:
 
 ```markdown
 # References
 ```
 
-Pandoc will place the bibliography under that heading rather than appending a new one.
-
-### Citation keys and Zotero
+### Citation keys
 
 Better BibTeX's default key format (`[auth:lower][year][title:lower:keepfirst:nopunct]`) produces readable, consistent keys. Set your preferred format in Zotero -> Edit -> Preferences -> Better BibTeX -> Citation key formula.
 
@@ -305,11 +287,7 @@ Better BibTeX's default key format (`[auth:lower][year][title:lower:keepfirst:no
 
 ## 9. Tables
 
-Tables are the area that requires the most care, especially when preparing for journal submission.
-
 ### Basic markdown tables
-
-For simple tables you can write them directly in markdown:
 
 ```markdown
 | Variable | Mean | SD | N |
@@ -321,11 +299,9 @@ For simple tables you can write them directly in markdown:
 : Descriptive statistics
 ```
 
-Pandoc converts markdown tables to `longtable` environments in LaTeX.
+Pandoc converts markdown tables to `longtable` environments in LaTeX. The template automatically applies `footnotesize` font and single spacing to all `longtable` environments.
 
 ### knitr tables with `knitr::kable()`
-
-For tables generated from R objects, `knitr::kable()` is the standard approach:
 
 ```r
 # In a code chunk with echo=FALSE
@@ -339,50 +315,23 @@ knitr::kable(
 )
 ```
 
-By default, `knitr::kable()` with `format = "latex"` produces a `longtable` environment. The template automatically applies `footnotesize` font and single spacing to all `longtable` environments.
-
-### Tables for journal submission
-
-Journal submission requires tables to appear **after the references**, with `[Insert Table N about here]` markers in the text body. This requires two things: enabling `journal_style` mode and generating tables as `table` float environments rather than `longtable`.
-
-The critical setting is `longtable = FALSE`:
-
-```r
-knitr::kable(
-  summary_table,
-  format    = "latex",
-  booktabs  = TRUE,
-  longtable = FALSE,      # produces a table float, not longtable
-  caption   = "Descriptive statistics."
-)
-```
-
-With `longtable = FALSE`, knitr wraps the table in a `\begin{table}...\end{table}` float. When `journal_style: true`, the `endfloat` package defers these floats to after the bibliography and replaces them with bold centered markers in the text. See Section 12 for the full workflow.
-
 ### kableExtra for styled tables
-
-The `kableExtra` package extends `knitr::kable()` with additional formatting:
 
 ```r
 library(kableExtra)
 
 knitr::kable(
   summary_table,
-  format    = "latex",
-  booktabs  = TRUE,
-  longtable = FALSE,
-  caption   = "Descriptive statistics.",
-  digits    = 2
+  format   = "latex",
+  booktabs = TRUE,
+  caption  = "Descriptive statistics.",
+  digits   = 2
 ) |>
   kable_styling(latex_options = "hold_position") |>
   add_header_above(c(" " = 1, "Full sample" = 3))
 ```
 
-`latex_options = "hold_position"` adds `[!h]` to the float specifier, which is overridden in `journal_style` mode -- all floats are deferred regardless of specifier.
-
 ### Table notes
-
-To add a source or method note below a table:
 
 ```r
 knitr::kable(...) |>
@@ -414,7 +363,7 @@ Key chunk options:
 | Option | What it does |
 |---|---|
 | `fig.cap` | Caption text |
-| `fig.width`, `fig.height` | Figure dimensions in inches (controls aspect ratio) |
+| `fig.width`, `fig.height` | Figure dimensions in inches |
 | `out.width` | Output width as a percentage of text width, e.g. `"85%"` |
 | `fig.align` | `"center"` (default), `"left"`, `"right"` |
 | `fig.pos` | LaTeX placement specifier, e.g. `"h"` for here |
@@ -422,24 +371,18 @@ Key chunk options:
 ### External image files
 
 ```markdown
-![Distribution of log wages by firm size quintile.](figures/wage-dist.pdf){width=85%}
+![Caption text.](figures/wage-dist.pdf){width=85%}
 ```
 
 PDF and EPS figures produce the sharpest output. PNG and JPEG also work -- use at least 300 dpi for print quality.
-
-### Figure placement
-
-By default, LaTeX places figures where they fit best. To request placement near the source location, add `fig.pos = "h"` to the chunk. In `journal_style` mode, placement specifiers are ignored -- all figures are deferred to after the bibliography.
 
 ---
 
 ## 11. Preparing for submission
 
-Most journals require some combination of double spacing, line numbers, anonymization, and tables/figures after the references. Each is a one-line YAML change.
-
 ### Anonymous review
 
-Suppresses author name, date, acknowledgements, and affiliation from the title page. All other content is unchanged.
+Suppresses author name, date, acknowledgements, and affiliation from the title page.
 
 ```yaml
 anonymize: true
@@ -461,11 +404,9 @@ Overrides the preset line spacing. Footnotes and the bibliography remain single-
 linenumbers: true
 ```
 
-Adds continuous line numbers in the left margin. **Known issue:** line number gutter alignment may drift slightly at 1.5x or 2x spacing due to an interaction between the `lineno` and `setspace` packages. The counter itself is always correct. Using `doublespace: true` is more reliable than the default 1.5x spacing when line numbers are active.
+Adds continuous line numbers in the left margin. **Known issue:** gutter alignment may drift slightly at 1.5x or 2x spacing due to an interaction between the `lineno` and `setspace` packages. The counter itself is always correct. Using `doublespace: true` is more reliable than the default 1.5x spacing when line numbers are active.
 
-**Do not combine `linenumbers: true` with `journal_style: true`.** The two modes interact poorly. Use line numbers for the review draft; switch to journal style for the final submission format.
-
-### A typical review-submission YAML
+### A typical submission YAML
 
 ```yaml
 ---
@@ -502,95 +443,7 @@ linenumbers: true
 
 ---
 
-## 12. Journal-style mode
-
-Many journals require tables and figures to appear as separate pages **after the references**, with placeholder markers in the manuscript body. Set `journal_style: true` to enable this.
-
-```yaml
-journal_style: true
-```
-
-With `journal_style` active, every `figure` and `table` float is replaced in the text body by a bold, centered marker:
-
-```
-[Insert Table 1 about here]
-
-[Insert Figure 1 about here]
-```
-
-The actual floats are collected and printed after the bibliography -- tables first (one per page), then figures (one per page).
-
-### Two-pass compilation required
-
-`journal_style` mode uses the `endfloat` LaTeX package, which requires **two compilation passes**. On the first pass, floats are written to auxiliary files (`.ttt` for tables, `.fff` for figures). On the second pass, those files are typeset after the bibliography.
-
-**Knit twice** when you first enable `journal_style`, or after adding or removing floats:
-
-```r
-rmarkdown::render("paper.Rmd")   # first pass
-rmarkdown::render("paper.Rmd")   # second pass -- floats placed correctly
-```
-
-RStudio's Knit button runs a single pass. Run `rmarkdown::render()` from the console, or use `latexmk` which detects the need for additional passes automatically:
-
-```bash
-latexmk -xelatex paper.tex
-```
-
-### Table floats are required
-
-The deferral mechanism works on LaTeX **float environments** (`figure`, `table`). It does not affect `longtable`, which is a non-float.
-
-Pandoc's default for markdown table syntax is `longtable`. To get tables deferred in `journal_style` mode, use `longtable = FALSE` in `knitr::kable()`:
-
-```r
-# This table WILL be deferred
-knitr::kable(df, format = "latex", booktabs = TRUE, longtable = FALSE,
-             caption = "Descriptive statistics.")
-
-# This table will NOT be deferred (longtable is the default)
-knitr::kable(df, format = "latex", booktabs = TRUE)
-```
-
-Markdown pipe table syntax also produces `longtable` and will not be deferred. For journal-mode tables, always use `knitr::kable(..., longtable = FALSE)`.
-
-### Journal-style submission YAML
-
-```yaml
----
-title: "The Organizational Basis of Wage Inequality"
-surname: "Cohen"
-runningtitle: "Organizational Basis of Wage Inequality"
-
-author:
-  - name: "Joseph N. Cohen"
-author_dept:  "Department of Sociology"
-author_inst:  "Queens College, City University of New York"
-author_email: "joseph.cohen@qc.cuny.edu"
-
-abstract: |
-  [Your abstract here.]
-
-bibliography: references.bib
-csl: default.csl
-template: jnctemplate.tex
-fontpath: fonts/
-
-fontset: demography
-doublespace: true
-journal_style: true
----
-```
-
-### Known limitations
-
-- `float [H]` placement specifiers are ignored; `endfloat` defers all floats regardless.
-- Do not combine with `linenumbers: true`.
-- Markdown table syntax and `knitr::kable()` without `longtable = FALSE` produce non-deferred output.
-
----
-
-## 13. Quick reference: all YAML variables
+## 12. Quick reference: all YAML variables
 
 ### Document metadata
 
@@ -634,7 +487,6 @@ journal_style: true
 |---|---|---|
 | `anonymize` | `true` or `false` | Suppress identifying metadata for blind review |
 | `linenumbers` | `true` or `false` | Add continuous line numbers |
-| `journal_style` | `true` or `false` | Defer floats to after bibliography with markers; requires two compilation passes |
 
 ### Bibliography
 
@@ -683,7 +535,6 @@ fontpath: fonts/
 
 anonymize: false
 doublespace: false
-journal_style: false
 linenumbers: false
 numbersections: false
 maincolumns: 1
@@ -692,7 +543,7 @@ maincolumns: 1
 
 ---
 
-## 14. Bibliography: supported source types
+## 13. Bibliography: supported source types
 
 The bundled `default.csl` handles modern source types that standard styles format poorly. Set the Zotero item type as follows:
 
@@ -714,8 +565,6 @@ The bundled `default.csl` handles modern source types that standard styles forma
 
 ### R packages in Zotero
 
-Cite R packages using the Software item type:
-
 | Zotero field | Value |
 |---|---|
 | Title | Package name, e.g. `ggplot2` |
@@ -730,7 +579,7 @@ Renders as: *Author (Year). Title (Version x.x.x) [Computer software]. Publisher
 
 ---
 
-## 15. Non-R installation
+## 14. Non-R installation
 
 For users without R, two shell scripts are provided.
 
