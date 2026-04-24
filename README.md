@@ -128,6 +128,11 @@ numbersections: false
 maincolumns: 1
 fontset: demography
 
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+
 header-includes:
    - \usepackage{booktabs}
    - \usepackage{pdflscape}
