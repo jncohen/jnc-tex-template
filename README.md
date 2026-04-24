@@ -118,7 +118,6 @@ acknowledgements: |
 
 bibliography: references.bib
 csl: default.csl
-template: jnctemplate.tex
 fontpath: fonts/
 
 anonymize: false
@@ -130,6 +129,7 @@ fontset: demography
 
 output:
   pdf_document:
+    template: jnctemplate.tex
     latex_engine: xelatex
     keep_tex: true
 
@@ -139,7 +139,7 @@ header-includes:
 ---
 ```
 
-**Important:** Do NOT use an `output:` block in the YAML. The template is Quarto-compatible and reads configuration directly from the top-level YAML fields shown above.
+**Important:** `template: jnctemplate.tex` must go inside the `output: pdf_document:` block, not at the top level. A top-level `template:` field is passed as document metadata and does not tell rmarkdown which template file to use. All other custom variables (`fontset`, `fontpath`, `surname`, etc.) stay at the top level.
 
 Then write your document body in standard R Markdown below the `---`.
 
@@ -305,9 +305,32 @@ Pandoc uses `@key` syntax, where `key` is the BibTeX key in your `.bib` file.
 
 ### Where the bibliography appears
 
-Pandoc automatically appends the bibliography at the end of the document body. The References heading is generated automatically. To force a page break before it, add `\clearpage` at the end of your body text.
+Pandoc appends the bibliography at the very end of the document by default. If your document has an appendix with tables or figures after the main text, the bibliography will appear after them unless you explicitly anchor it.
 
-To place the bibliography under a manual heading, add this at the very end of your `.Rmd`:
+**To place the bibliography before an appendix,** use a `{#refs}` div to mark where references should go. Structure your `.Rmd` like this:
+
+```markdown
+[...main text...]
+
+\clearpage
+
+# References
+
+::: {#refs}
+:::
+
+\clearpage
+
+# Appendix
+
+## Table A1
+
+[...appendix tables and figures...]
+```
+
+The `::: {#refs} :::` div is Pandoc's explicit bibliography anchor. Without it, references are appended after the last line of the document regardless of section structure. The `\clearpage` calls ensure each section starts on a fresh page.
+
+**To place the bibliography under a manual heading without an appendix,** simply add at the very end of your `.Rmd`:
 
 ```markdown
 # References
@@ -465,13 +488,17 @@ keywords:
 
 bibliography: references.bib
 csl: default.csl
-template: jnctemplate.tex
 fontpath: fonts/
 
 fontset: demography
 anonymize: true
 doublespace: true
 linenumbers: true
+
+output:
+  pdf_document:
+    template: jnctemplate.tex
+    latex_engine: xelatex
 ---
 ```
 
@@ -564,7 +591,6 @@ acknowledgements: |
 
 bibliography: references.bib
 csl: default.csl
-template: jnctemplate.tex
 fontpath: fonts/
 
 anonymize: false
@@ -572,6 +598,11 @@ doublespace: false
 linenumbers: false
 numbersections: false
 maincolumns: 1
+
+output:
+  pdf_document:
+    template: jnctemplate.tex
+    latex_engine: xelatex
 ---
 ```
 
