@@ -262,7 +262,7 @@ $endif$
 \usepackage{etoolbox}
 
 \AtBeginEnvironment{longtable}{
-  \footnotesize
+  \small
   \singlespacing
   \setlength{\LTleft}{0pt}
   \setlength{\LTright}{0pt}
@@ -312,15 +312,20 @@ $if(numbersections)$
     \titleformat{\section}{\large\scshape}{\thesection}{1em}{}
     \titleformat{\subsection}{\normalsize\bfseries\itshape}{\thesubsection}{1em}{}
     \titleformat{\subsubsection}{\normalsize\itshape}{\thesubsubsection}{1em}{}
+    \titlespacing{\section}{0pt}{2.5ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
   \else\ifjncdemography
     \titleformat{\section}{\large\bfseries}{\thesection}{1em}{}[\jncdemorule]
     \titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
     \titleformat{\subsubsection}{\normalsize\bfseries\itshape}{\thesubsubsection}{1em}{}
+    \titlespacing{\section}{0pt}{2ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
   \else\ifjncmethods
     \titleformat{\section}{\large\bfseries\color{jncaccent}}{\thesection}{1em}{}[\jncmetrule]
     \titleformat{\subsection}{\normalsize\bfseries\color{jncaccent}}{\thesubsection}{1em}{}
     \titleformat{\subsubsection}{\normalsize\itshape\color{jncaccent}}{\thesubsubsection}{1em}{}
-    %% Negative afterskip suppresses first-paragraph indent (titlesec convention)
     \titlespacing{\section}{0pt}{1.75ex plus 0.5ex}{-0.5ex}
     \titlespacing{\subsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
     \titlespacing{\subsubsection}{0pt}{1ex plus 0.25ex}{-0.5ex}
@@ -328,6 +333,9 @@ $if(numbersections)$
     \titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
     \titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
     \titleformat{\subsubsection}{\normalsize\bfseries\itshape}{\thesubsubsection}{1em}{}
+    \titlespacing{\section}{0pt}{2ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
   \fi\fi\fi
 $else$
   \setcounter{secnumdepth}{0}
@@ -336,16 +344,20 @@ $else$
     \titleformat{\section}{\large\scshape}{}{0pt}{}
     \titleformat{\subsection}{\normalsize\bfseries\itshape}{}{0pt}{}
     \titleformat{\subsubsection}{\normalsize\itshape}{}{0pt}{}
-    \titlespacing{\section}{0pt}{2.5ex plus 0.5ex}{1ex}
+    \titlespacing{\section}{0pt}{2.5ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
   \else\ifjncdemography
     \titleformat{\section}{\large\bfseries}{}{0pt}{}[\jncdemorule]
     \titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}
     \titleformat{\subsubsection}{\normalsize\bfseries\itshape}{}{0pt}{}
+    \titlespacing{\section}{0pt}{2ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
   \else\ifjncmethods
     \titleformat{\section}{\large\bfseries\color{jncaccent}}{}{0pt}{}[\jncmetrule]
     \titleformat{\subsection}{\normalsize\bfseries\color{jncaccent}}{}{0pt}{}
     \titleformat{\subsubsection}{\normalsize\itshape\color{jncaccent}}{}{0pt}{}
-    %% Negative afterskip suppresses first-paragraph indent (titlesec convention)
     \titlespacing{\section}{0pt}{1.75ex plus 0.5ex}{-0.5ex}
     \titlespacing{\subsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
     \titlespacing{\subsubsection}{0pt}{1ex plus 0.25ex}{-0.5ex}
@@ -353,6 +365,9 @@ $else$
     \titleformat{\section}{\large\bfseries}{}{0pt}{}
     \titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}
     \titleformat{\subsubsection}{\normalsize\bfseries\itshape}{}{0pt}{}
+    \titlespacing{\section}{0pt}{2ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
   \fi\fi\fi
 $endif$
 
@@ -365,6 +380,17 @@ $endif$
 \else
   \usepackage[hidelinks]{hyperref}
 \fi
+
+%% PDF document metadata — populated from YAML front matter.
+%% Enables proper indexing in repositories, readers, and search engines.
+%% Multiple authors are semicolon-separated (PDF/XMP convention).
+\hypersetup{
+  pdftitle    = {$title$$if(subtitle)$: $subtitle$$endif$},
+  pdfauthor   = {$for(author)$$if(author.name)$$author.name$$else$$author$$endif$$sep$; $endfor$},
+  pdfsubject  = {$if(subtitle)$$subtitle$$endif$},
+  pdfkeywords = {$for(keywords)$$keywords$$sep$, $endfor$}
+}
+
 \usepackage{fancyhdr}
 
 % =======================================================
@@ -509,6 +535,17 @@ $header-includes$
   \fancyfoot[C]{\thepage}
 }
 
+%% methods: tint the header rule to match the accent color palette.
+%% \headrule is the fancyhdr hook that draws the line below the header;
+%% redefining it with \color{jncrule} keeps the rule weight unchanged
+%% while coordinating it with section rules and link colors.
+\ifjncmethods
+  \renewcommand{\headrule}{%
+    {\color{jncrule}\hrule width\headwidth height\headrulewidth}%
+    \vskip-\headrulewidth%
+  }
+\fi
+
 $if(surname)$
 $if(runningtitle)$
 \fancyhead[R]{\small\itshape $surname$: $runningtitle$}
@@ -570,7 +607,7 @@ $endif$
 
 % =============================================================
 % TITLE PAGE
-% methods:  left-aligned, thick accent rule top and bottom
+% methods:  centered, with thick accent rules top and bottom
 % others:   centered (humanities/demography/default)
 % =============================================================
 
@@ -709,7 +746,7 @@ $endif$
 $if(date)$
 \ifjncanon\else
 \vspace{0.5em}
-\textit{$date$}\par
+{\small $date$}\par
 \fi
 $endif$
 
