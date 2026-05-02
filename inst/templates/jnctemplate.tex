@@ -320,7 +320,10 @@ $if(numbersections)$
     \titleformat{\section}{\large\bfseries\color{jncaccent}}{\thesection}{1em}{}[\jncmetrule]
     \titleformat{\subsection}{\normalsize\bfseries\color{jncaccent}}{\thesubsection}{1em}{}
     \titleformat{\subsubsection}{\normalsize\itshape\color{jncaccent}}{\thesubsubsection}{1em}{}
-    \titlespacing{\section}{0pt}{1.75ex plus 0.5ex}{0.5ex}
+    %% Negative afterskip suppresses first-paragraph indent (titlesec convention)
+    \titlespacing{\section}{0pt}{1.75ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1ex plus 0.25ex}{-0.5ex}
   \else
     \titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
     \titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
@@ -342,7 +345,10 @@ $else$
     \titleformat{\section}{\large\bfseries\color{jncaccent}}{}{0pt}{}[\jncmetrule]
     \titleformat{\subsection}{\normalsize\bfseries\color{jncaccent}}{}{0pt}{}
     \titleformat{\subsubsection}{\normalsize\itshape\color{jncaccent}}{}{0pt}{}
-    \titlespacing{\section}{0pt}{1.75ex plus 0.5ex}{0.5ex}
+    %% Negative afterskip suppresses first-paragraph indent (titlesec convention)
+    \titlespacing{\section}{0pt}{1.75ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1ex plus 0.25ex}{-0.5ex}
   \else
     \titleformat{\section}{\large\bfseries}{}{0pt}{}
     \titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}
@@ -401,6 +407,82 @@ $endif$
 
 $if(highlighting-macros)$
 $highlighting-macros$
+% =======================================================
+% 8b. CODE BLOCK STYLING (methods fontset only)
+%
+% Applies to:
+%   Shaded/Highlighting  — knitr/Pandoc code INPUT blocks
+%   verbatim             — knitr console OUTPUT blocks
+%
+% Design:
+%   Input:  blue-tinted background + 3pt left accent rule, footnotesize
+%   Output: neutral gray background, footnotesize, no page-split
+%
+% Implementation notes:
+%   - framed is already loaded by $highlighting-macros$ (via snugshade).
+%   - \MakeFramed with a custom \FrameCommand draws a colored vrule then
+%     a \colorbox; MakeFramed passes the framed content as the argument
+%     to the last token of \FrameCommand.
+%   - \RecustomVerbatimEnvironment (fancyvrb, also pre-loaded) overrides
+%     the fontsize that Pandoc bakes into Highlighting / verbatim.
+%   - \surroundwithmdframed wraps verbatim externally so its verbatim
+%     catcode regime is unaffected, then applies the shaded background.
+%   - nobreak=true on the verbatim frame prevents output blocks from
+%     splitting across pages; for input blocks, an outer \minipage
+%     wrapper achieves the same (blocks longer than \textheight still
+%     overflow, which is the acceptable edge-case trade-off).
+% =======================================================
+\ifjncmethods
+  \usepackage{mdframed}
+
+  %% --- colors ---
+  \definecolor{codeinputbg}{HTML}{EBF0F7}   %% blue-tinted input background
+  \definecolor{codeoutputbg}{HTML}{F2F2F2}  %% neutral gray output background
+
+  %% --- code INPUT: Shaded + left accent rule, no page split ---
+  %% The outer minipage keeps the block together; MakeFramed draws the
+  %% colored vrule + background.  Long blocks that exceed \textheight
+  %% will still overflow (acceptable trade-off vs. splitting mid-block).
+  \renewenvironment{Shaded}{%
+    \vspace{3pt}%
+    \noindent\begin{minipage}{\linewidth}%
+    \def\FrameCommand{%
+      \hspace{1pt}%
+      {\color{jncrule}\vrule width 3pt}%
+      \hspace{4pt}%
+      \colorbox{codeinputbg}%
+    }%
+    \MakeFramed{\advance\hsize by -\width \FrameRestore}%
+    \footnotesize
+    \setlength{\parskip}{0pt}%
+    \setlength{\partopsep}{0pt}%
+  }{%
+    \endMakeFramed
+    \end{minipage}%
+    \vspace{3pt}%
+  }
+
+  %% Fira Code at footnotesize inside highlighted blocks
+  \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{%
+    commandchars=\\\{\},%
+    fontsize=\footnotesize%
+  }
+
+  %% --- code OUTPUT: shaded verbatim, no page split ---
+  \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize}
+  \surroundwithmdframed[%
+    backgroundcolor=codeoutputbg,%
+    linewidth=0pt,%
+    skipabove=3pt,%
+    skipbelow=3pt,%
+    innerleftmargin=6pt,%
+    innerrightmargin=6pt,%
+    innertopmargin=4pt,%
+    innerbottommargin=4pt,%
+    nobreak=true%
+  ]{verbatim}
+
+\fi
 $endif$
 
 %% NOTE (Issue 5): knitr/Quarto may inject booktabs, float, longtable, or
@@ -519,8 +601,8 @@ $endfor$
 $if(author_dept)$$author_dept$\par$endif$%
 $if(author_inst)$$author_inst$\par$endif$%
 $if(author_addr)$$author_addr$\par$endif$%
-$if(author_email)$\texttt{$author_email$}\par$endif$%
-$if(author_web)$$author_web$\par$endif$%
+$if(author_email)$\href{mailto:$author_email$}{$author_email$}\par$endif$%
+$if(author_web)$\href{$author_web$}{$author_web$}\par$endif$%
 $if(author_orcid)$ORCID: $author_orcid$\par$endif$%
 }%
 \fi
@@ -529,13 +611,13 @@ $endif$
 
 \ifjncmethods
 %% -------------------------------------------------------
-%% METHODS: futuristic left-aligned title page
+%% METHODS: centered title page with accent rules
 %% -------------------------------------------------------
 \begin{titlepage}
 \thispagestyle{empty}
 \noindent\textcolor{jncaccent}{\rule{\textwidth}{4pt}}\par
 \vspace{3em}
-\begin{flushleft}
+\begin{center}
 \begin{singlespace}
 
 {\setstretch{0.9}\LARGE\bfseries $title$\par}
@@ -552,41 +634,47 @@ $endif$
 $if(date)$
 \ifjncanon\else
 \vspace{0.25em}
-{\small\color{jncaccent}\textit{$date$}}\par
+{\small $date$}\par
 \fi
 $endif$
 
 \end{singlespace}
-\end{flushleft}
+\end{center}
 
-\vfill
+\vspace{2em}
 
 $if(abstract)$
-\noindent\textcolor{jncrule}{\rule{0.35\textwidth}{0.5pt}}\par
+\begin{center}
+\textcolor{jncrule}{\rule{0.35\textwidth}{0.5pt}}\par
 \vspace{0.5em}
-\begin{minipage}{0.85\textwidth}
+\begin{minipage}{0.9\linewidth}
 \small\singlespacing
 \textbf{Abstract}\par\vspace{0.25em}
 $abstract$
 $if(keywords)$
-\vspace{1em}
+\vspace{0.75em}
 \noindent\textbf{Keywords: }$for(keywords)$$keywords$$sep$, $endfor$
 $endif$
 \end{minipage}
+\end{center}
 \vspace{1em}
 $endif$
 
 $if(acknowledgements)$
 \ifjncanon\else
-\begin{minipage}{0.85\textwidth}
+\begin{center}
+\begin{minipage}{0.9\linewidth}
 \footnotesize\singlespacing
 \noindent\textcolor{jncaccent}{\rule{0.25\textwidth}{0.4pt}}\par
 \textbf{Acknowledgements}\par
 $acknowledgements$
 \end{minipage}
+\end{center}
 \vspace{1em}
 \fi
 $endif$
+
+\vfill
 
 \noindent\textcolor{jncaccent}{\rule{\textwidth}{2pt}}\par
 \end{titlepage}
