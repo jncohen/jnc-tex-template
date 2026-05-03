@@ -466,7 +466,6 @@ $highlighting-macros$
 %     overflow, which is the acceptable edge-case trade-off).
 % =======================================================
 \ifjncmethods
-  \usepackage{mdframed}
 
   %% --- colors ---
   \definecolor{codeinputbg}{HTML}{EBF0F7}   %% blue-tinted input background
@@ -506,18 +505,26 @@ $highlighting-macros$
   \renewcommand{\verbatim@font}{\footnotesize\ttfamily}
   \makeatother
 
-  %% --- code OUTPUT: shaded verbatim, no page split ---
-  \surroundwithmdframed[%
-    backgroundcolor=codeoutputbg,%
-    linewidth=0pt,%
-    skipabove=3pt,%
-    skipbelow=3pt,%
-    innerleftmargin=6pt,%
-    innerrightmargin=6pt,%
-    innertopmargin=4pt,%
-    innerbottommargin=4pt,%
-    nobreak=true%
-  ]{verbatim}
+  %% --- code OUTPUT: shaded verbatim ---
+  %% mdframed is intentionally avoided: it loads pgf/tikz, which patches
+  %% \@ifnextchar globally and causes infinite recursion ("TeX capacity
+  %% exceeded [input stack size=10000]") when hyperref's \href is called
+  %% inside \jncauthorblock.  The framed package (already loaded above by
+  %% $highlighting-macros$) is sufficient and carries no such risk.
+  %%
+  %% etoolbox's \AtBeginEnvironment runs before verbatim's catcode changes,
+  %% and \AtEndEnvironment runs after they are restored, so \MakeFramed and
+  %% \endMakeFramed execute in normal LaTeX mode on either side of the
+  %% verbatim content.
+  \AtBeginEnvironment{verbatim}{%
+    \vspace{3pt}%
+    \def\FrameCommand{\fboxsep=4pt\colorbox{codeoutputbg}}%
+    \MakeFramed{\FrameRestore}%
+  }
+  \AtEndEnvironment{verbatim}{%
+    \endMakeFramed
+    \vspace{3pt}%
+  }
 
 \fi
 $endif$
@@ -649,8 +656,15 @@ $endfor$
 $if(author_dept)$$author_dept$\par$endif$%
 $if(author_inst)$$author_inst$\par$endif$%
 $if(author_addr)$$author_addr$\par$endif$%
-$if(author_email)$\href{mailto:$author_email$}{$author_email$}\par$endif$%
-$if(author_web)$\href{$author_web$}{$author_web$}\par$endif$%
+%% NOTE: $author_email$ and $author_web$ are used WITHOUT a \href wrapper.
+%% Pandoc processes YAML metadata values as Markdown and, with its default
+%% autolink_bare_uris extension, converts plain email addresses to
+%% \href{mailto:...}{\nolinkurl{...}} and bare URLs to \url{...} before
+%% the values reach this template.  Wrapping them again in \href would
+%% produce nested \href calls, which causes hyperref's \@protected@testopt
+%% to recurse infinitely and overflow TeX's input stack.
+$if(author_email)$$author_email$\par$endif$%
+$if(author_web)$$author_web$\par$endif$%
 $if(author_orcid)$ORCID: $author_orcid$\par$endif$%
 }%
 \fi
