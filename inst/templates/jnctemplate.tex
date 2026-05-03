@@ -446,7 +446,7 @@ $highlighting-macros$
 %   Output: neutral gray background, footnotesize, no page-split
 %
 % Implementation notes:
-%   - framed is already loaded by $highlighting-macros$ (via snugshade).
+%   - framed is already loaded by highlighting-macros (via snugshade).
 %   - \MakeFramed with a custom \FrameCommand draws a colored vrule then
 %     a \colorbox; MakeFramed passes the framed content as the argument
 %     to the last token of \FrameCommand.
@@ -454,7 +454,7 @@ $highlighting-macros$
 %     fancyvrb v4+ (MiKTeX/TeX Live 2024+) pre-defines \VerbBar internally;
 %     \RecustomVerbatimEnvironment re-triggers that initialisation, causing
 %     a "Command \VerbBar already defined" conflict with Pandoc's
-%     $highlighting-macros$.  \fvset sets options without re-registering
+%     highlighting-macros.  \fvset sets options without re-registering
 %     the environment and avoids the conflict entirely.
 %   - Font size for verbatim uses \verbatim@font, the LaTeX hook that
 %     controls the typeface inside all verbatim environments, for the
@@ -511,7 +511,7 @@ $highlighting-macros$
   %% \@ifnextchar globally and causes infinite recursion ("TeX capacity
   %% exceeded [input stack size=10000]") when hyperref's \href is called
   %% inside \jncauthorblock.  The framed package (already loaded above by
-  %% $highlighting-macros$) is sufficient and carries no such risk.
+  %% highlighting-macros) is sufficient and carries no such risk.
   %%
   %% etoolbox's \AtBeginEnvironment runs before verbatim's catcode changes,
   %% and \AtEndEnvironment runs after they are restored, so \MakeFramed and
