@@ -449,8 +449,15 @@ $highlighting-macros$
 %   - \MakeFramed with a custom \FrameCommand draws a colored vrule then
 %     a \colorbox; MakeFramed passes the framed content as the argument
 %     to the last token of \FrameCommand.
-%   - \RecustomVerbatimEnvironment (fancyvrb, also pre-loaded) overrides
-%     the fontsize that Pandoc bakes into Highlighting / verbatim.
+%   - Font size for Highlighting uses \fvset, NOT \RecustomVerbatimEnvironment.
+%     fancyvrb v4+ (MiKTeX/TeX Live 2024+) pre-defines \VerbBar internally;
+%     \RecustomVerbatimEnvironment re-triggers that initialisation, causing
+%     a "Command \VerbBar already defined" conflict with Pandoc's
+%     $highlighting-macros$.  \fvset sets options without re-registering
+%     the environment and avoids the conflict entirely.
+%   - Font size for verbatim uses \verbatim@font, the LaTeX hook that
+%     controls the typeface inside all verbatim environments, for the
+%     same reason.
 %   - \surroundwithmdframed wraps verbatim externally so its verbatim
 %     catcode regime is unaffected, then applies the shaded background.
 %   - nobreak=true on the verbatim frame prevents output blocks from
@@ -488,14 +495,18 @@ $highlighting-macros$
     \vspace{3pt}%
   }
 
-  %% Fira Code at footnotesize inside highlighted blocks
-  \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{%
-    commandchars=\\\{\},%
-    fontsize=\footnotesize%
-  }
+  %% Fira Code at footnotesize for highlighted code blocks.
+  %% \fvset is safe with fancyvrb v4+; \RecustomVerbatimEnvironment is not.
+  \fvset{fontsize=\footnotesize}
+
+  %% footnotesize for standard verbatim (console output).
+  %% \verbatim@font is the LaTeX hook called inside every verbatim environment
+  %% to set the typeface; overriding it here is fancyvrb-independent.
+  \makeatletter
+  \renewcommand{\verbatim@font}{\footnotesize\ttfamily}
+  \makeatother
 
   %% --- code OUTPUT: shaded verbatim, no page split ---
-  \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize}
   \surroundwithmdframed[%
     backgroundcolor=codeoutputbg,%
     linewidth=0pt,%
