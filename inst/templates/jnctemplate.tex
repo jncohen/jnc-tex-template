@@ -316,14 +316,14 @@ $if(numbersections)$
     \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
     \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
   \else\ifjncdemography
-    \titleformat{\section}{\large\bfseries}{\thesection}{1em}{}[\jncdemorule]
+    \titleformat{\section}{\large\bfseries}{\thesection}{1em}{}[\jncdemorule\vspace{0.4em}]
     \titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
     \titleformat{\subsubsection}{\normalsize\bfseries\itshape}{\thesubsubsection}{1em}{}
     \titlespacing{\section}{0pt}{2ex plus 0.5ex}{-0.5ex}
     \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
     \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
   \else\ifjncmethods
-    \titleformat{\section}{\large\bfseries\color{jncaccent}}{\thesection}{1em}{}[\jncmetrule]
+    \titleformat{\section}{\large\bfseries\color{jncaccent}}{\thesection}{1em}{}[\jncmetrule\vspace{0.4em}]
     \titleformat{\subsection}{\normalsize\bfseries\color{jncaccent}}{\thesubsection}{1em}{}
     \titleformat{\subsubsection}{\normalsize\itshape\color{jncaccent}}{\thesubsubsection}{1em}{}
     \titlespacing{\section}{0pt}{1.75ex plus 0.5ex}{-0.5ex}
@@ -348,14 +348,14 @@ $else$
     \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
     \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
   \else\ifjncdemography
-    \titleformat{\section}{\large\bfseries}{}{0pt}{}[\jncdemorule]
+    \titleformat{\section}{\large\bfseries}{}{0pt}{}[\jncdemorule\vspace{0.4em}]
     \titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}
     \titleformat{\subsubsection}{\normalsize\bfseries\itshape}{}{0pt}{}
     \titlespacing{\section}{0pt}{2ex plus 0.5ex}{-0.5ex}
     \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
     \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
   \else\ifjncmethods
-    \titleformat{\section}{\large\bfseries\color{jncaccent}}{}{0pt}{}[\jncmetrule]
+    \titleformat{\section}{\large\bfseries\color{jncaccent}}{}{0pt}{}[\jncmetrule\vspace{0.4em}]
     \titleformat{\subsection}{\normalsize\bfseries\color{jncaccent}}{}{0pt}{}
     \titleformat{\subsubsection}{\normalsize\itshape\color{jncaccent}}{}{0pt}{}
     \titlespacing{\section}{0pt}{1.75ex plus 0.5ex}{-0.5ex}
@@ -715,7 +715,7 @@ $if(abstract)$
 \textbf{Abstract}\par\vspace{0.25em}
 $abstract$
 $if(keywords)$
-\vspace{0.75em}
+\par\vspace{0.75em}
 \noindent\textbf{Keywords: }$for(keywords)$$keywords$$sep$, $endfor$
 $endif$
 \end{minipage}
@@ -787,7 +787,7 @@ $if(abstract)$
 \textbf{Abstract}\par\vspace{0.25em}
 $abstract$
 $if(keywords)$
-\vspace{1em}
+\par\vspace{1em}
 \noindent\textbf{Keywords: }$for(keywords)$$keywords$$sep$, $endfor$
 $endif$
 \end{minipage}
