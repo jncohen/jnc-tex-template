@@ -41,6 +41,7 @@ $endif$
 \ifx\jncfontset\jncfontset@h\jnchumanitiestrue\else\jnchumanitiesfalse\fi
 \ifx\jncfontset\jncfontset@d\jncdemographytrue\else\jncdemographyfalse\fi
 \ifx\jncfontset\jncfontset@m\jncmethodstrue\else\jncmethodsfalse\fi
+\newcommand{\jncmethodscodescale}{0.90}
 
 %% --- FONT PATH (override with 'fontpath:' YAML variable for managed templates) ---
 $if(fontpath)$
@@ -67,7 +68,7 @@ $endif$
     \ifjncmethods
       %% methods: try Fira Code for monospace; fall back to Latin Modern Mono.
       \IfFileExists{FiraCode.sty}{%
-        \usepackage{FiraCode}%
+        \usepackage[scale=\jncmethodscodescale]{FiraCode}%
       }{%
         \PackageWarning{jnctemplate}{fontset=methods: Fira Code not found in the
           TeX distribution. Using Latin Modern Mono. Install the 'firacode'
@@ -145,6 +146,7 @@ $endif$
         Path        = \jncfontsdir,
         UprightFont = *-Regular,
         BoldFont    = *-Bold,
+        Scale       = \jncmethodscodescale,
         Extension   = .ttf]%
     }{%
       \PackageWarning{jnctemplate}{fontset=methods: \jncfontsdir
